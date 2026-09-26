@@ -33,6 +33,7 @@ export function applyComplementarySuppression<T extends { count: number }>(
   const visible = marked.filter((g) => !g.suppressed);
   if (visible.length === 0) return marked;
   let smallest = visible[0];
+  if (!smallest) return marked;
   for (const g of visible) if (g.count < smallest.count) smallest = g;
   smallest.suppressed = true;
   return marked;

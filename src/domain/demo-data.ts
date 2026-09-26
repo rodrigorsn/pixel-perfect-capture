@@ -159,7 +159,7 @@ function buildResponses(): AnonymousResponse[] {
           answers[q.id] = null;
           continue;
         }
-        const target = PROFILES[dep.id][q.dimensionId] ?? 2;
+        const target = PROFILES[dep.id]?.[q.dimensionId] ?? 2;
         // O alvo do perfil é expresso na direção "bruta" do item não invertido.
         const base = q.reverse ? 4 - target : target;
         const jitter = (rand() - 0.5) * 1.6;

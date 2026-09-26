@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcoesRouteImport } from './routes/acoes'
+import { Route as CampanhasRouteImport } from './routes/campanhas'
+import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as MetodologiaRouteImport } from './routes/metodologia'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as ResultadosRouteImport } from './routes/resultados'
+import { Route as RiscosRouteImport } from './routes/riscos'
+import { Route as ResponderCampaignIdRouteImport } from './routes/responder.$campaignId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AcoesRoute = AcoesRouteImport.update({
+  id: '/acoes',
+  path: '/acoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampanhasRoute = CampanhasRouteImport.update({
+  id: '/campanhas',
+  path: '/campanhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaRoute = EmpresaRouteImport.update({
+  id: '/empresa',
+  path: '/empresa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetodologiaRoute = MetodologiaRouteImport.update({
+  id: '/metodologia',
+  path: '/metodologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultadosRoute = ResultadosRouteImport.update({
+  id: '/resultados',
+  path: '/resultados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiscosRoute = RiscosRouteImport.update({
+  id: '/riscos',
+  path: '/riscos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResponderCampaignIdRoute = ResponderCampaignIdRouteImport.update({
+  id: '/responder/$campaignId',
+  path: '/responder/$campaignId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acoes': typeof AcoesRoute
+  '/campanhas': typeof CampanhasRoute
+  '/empresa': typeof EmpresaRoute
+  '/metodologia': typeof MetodologiaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/resultados': typeof ResultadosRoute
+  '/riscos': typeof RiscosRoute
+  '/responder/$campaignId': typeof ResponderCampaignIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acoes': typeof AcoesRoute
+  '/campanhas': typeof CampanhasRoute
+  '/empresa': typeof EmpresaRoute
+  '/metodologia': typeof MetodologiaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/resultados': typeof ResultadosRoute
+  '/riscos': typeof RiscosRoute
+  '/responder/$campaignId': typeof ResponderCampaignIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/acoes': typeof AcoesRoute
+  '/campanhas': typeof CampanhasRoute
+  '/empresa': typeof EmpresaRoute
+  '/metodologia': typeof MetodologiaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/resultados': typeof ResultadosRoute
+  '/riscos': typeof RiscosRoute
+  '/responder/$campaignId': typeof ResponderCampaignIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/acoes'
+    | '/campanhas'
+    | '/empresa'
+    | '/metodologia'
+    | '/relatorios'
+    | '/resultados'
+    | '/riscos'
+    | '/responder/$campaignId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/acoes'
+    | '/campanhas'
+    | '/empresa'
+    | '/metodologia'
+    | '/relatorios'
+    | '/resultados'
+    | '/riscos'
+    | '/responder/$campaignId'
+  id:
+    | '__root__'
+    | '/'
+    | '/acoes'
+    | '/campanhas'
+    | '/empresa'
+    | '/metodologia'
+    | '/relatorios'
+    | '/resultados'
+    | '/riscos'
+    | '/responder/$campaignId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcoesRoute: typeof AcoesRoute
+  CampanhasRoute: typeof CampanhasRoute
+  EmpresaRoute: typeof EmpresaRoute
+  MetodologiaRoute: typeof MetodologiaRoute
+  RelatoriosRoute: typeof RelatoriosRoute
+  ResultadosRoute: typeof ResultadosRoute
+  RiscosRoute: typeof RiscosRoute
+  ResponderCampaignIdRoute: typeof ResponderCampaignIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/acoes': {
+      id: '/acoes'
+      path: '/acoes'
+      fullPath: '/acoes'
+      preLoaderRoute: typeof AcoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campanhas': {
+      id: '/campanhas'
+      path: '/campanhas'
+      fullPath: '/campanhas'
+      preLoaderRoute: typeof CampanhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa': {
+      id: '/empresa'
+      path: '/empresa'
+      fullPath: '/empresa'
+      preLoaderRoute: typeof EmpresaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metodologia': {
+      id: '/metodologia'
+      path: '/metodologia'
+      fullPath: '/metodologia'
+      preLoaderRoute: typeof MetodologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resultados': {
+      id: '/resultados'
+      path: '/resultados'
+      fullPath: '/resultados'
+      preLoaderRoute: typeof ResultadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/riscos': {
+      id: '/riscos'
+      path: '/riscos'
+      fullPath: '/riscos'
+      preLoaderRoute: typeof RiscosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/responder/$campaignId': {
+      id: '/responder/$campaignId'
+      path: '/responder/$campaignId'
+      fullPath: '/responder/$campaignId'
+      preLoaderRoute: typeof ResponderCampaignIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcoesRoute: AcoesRoute,
+  CampanhasRoute: CampanhasRoute,
+  EmpresaRoute: EmpresaRoute,
+  MetodologiaRoute: MetodologiaRoute,
+  RelatoriosRoute: RelatoriosRoute,
+  ResultadosRoute: ResultadosRoute,
+  RiscosRoute: RiscosRoute,
+  ResponderCampaignIdRoute: ResponderCampaignIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
