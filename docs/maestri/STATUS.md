@@ -26,7 +26,7 @@ Executado em duas árvores: `origin/main` (clone limpo) e a pasta de trabalho lo
 - (a) E3: **Next.js + Prisma** — ver [ADR-0001](ADR-0001-next-prisma.md).
 - (b) Datas mantidas; trabalho local mantido (interpretação do Maestro; Rodrigo confirma).
 - (c) Trabalho local preservado na branch `etapa/E0-T03-baseline-local` e submetido a Revisor + QA antes de entrar na main.
-- (d) Segunda opinião: `opencode/nemotron-3-ultra-free`.
+- (d) Segunda opinião: `opencode/longcat-2.5-preview-free` (Nemotron descartado: só para teste, sem dados confidenciais; ver PAPEIS.md).
 
 ## Pendências
 

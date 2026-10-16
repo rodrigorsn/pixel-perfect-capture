@@ -17,7 +17,7 @@ Fluxo de cada tarefa: **Maestro → Dev → Revisor → QA → Maestro → Rodri
 | Dev | OpenCode `dev`; E0–E2: vencedor do teste `opencode/kimi-k2.7-code` × `opencode/deepseek-v4.1-flash`; E3–E5: `opencode/claude-sonnet-5-5` | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
 | Revisor | OpenCode `revisor`, `opencode/gpt-6.1-sol` (econômico: `opencode/deepseek-v4-pro`) | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
 | QA | OpenCode `qa`, `opencode/deepseek-v4.1-flash-free` (grátis até E3; pago da E4: `opencode/deepseek-v4.1-flash`; alternativa `opencode/claude-haiku-5-5`) | Rodar test, typecheck, build, e2e; percorrer o fluxo; reportar evidências | Não edita código; resume logs |
-| Segunda opinião | OpenCode `segunda-opiniao`, `opencode/nemotron-3-ultra-free` (decisão de 15/10: o "Jev 1.13 Free" não existe em `opencode models`) | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
+| Segunda opinião | OpenCode `segunda-opiniao`, `opencode/longcat-2.5-preview-free` (alternativa: `opencode/space-bunny-free`). Decisão de 15/10: o "Jev 1.13 Free" não existe em `opencode models`; o Nemotron foi descartado por ser "só para teste, sem dados confidenciais" e registrado pela NVIDIA ([opencode.ai/docs/zen](https://opencode.ai/docs/zen)) | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
 | Rodrigo | Product Owner | Aprovar fim de etapa e decisões; faz o merge | — |
 
 Regras de modelos: gratuitos só até a E3; da E4 em diante, só pagos. IDs confirmados com `opencode models` (15/10/2026).
@@ -31,6 +31,14 @@ Regras de modelos: gratuitos só até a E3; da E4 em diante, só pagos. IDs conf
 - Segunda opinião sai do fluxo ao fim da E2; antes, o Maestro mostra quantas vezes ela apontou algo útil.
 - Não começar etapa nova sem a anterior aprovada.
 
+## Operação: log, fechamento de etapa, pareceres e sincronização
+
+1. **Log ao vivo fora do git.** `eventos.jsonl` fica em `.maestri/eventos.jsonl` na pasta principal (`.maestri/` está no `.gitignore`). `plano.json` continua em `docs/maestri/` (versionado).
+2. **Fechamento de etapa.** Ao fechar cada etapa, copie o log para `docs/maestri/historico/<ETAPA>-eventos.jsonl`, rode `bun run status` e inclua tudo no PR **"<ETAPA> — fechamento"**, junto com o `VALIDACOES.md`. Depois do merge do Rodrigo, o Maestro cria a tag `etapa-<ETAPA>`.
+3. **Pareceres.** Revisor e Segunda opinião continuam somente leitura e entregam o parecer ao Maestro. Quem publica no PR da tarefa é o **Maestro**, com `gh pr comment`, copiando o parecer de cada um. (Pendência: o `gh` ainda não está instalado nesta máquina; até lá, o Maestro cola o parecer no PR pelo link do GitHub.)
+4. **Main mudou** (ex.: edição no Lovable): os agentes atualizam a própria branch com `git merge main`, **nunca com rebase**.
+5. **Worktrees dos agentes** ficam fora do repositório: `../pixel-perfect-capture-<papel>`.
+
 ## Notas sobre as permissões (divergências da sintaxe documentada)
 
 Conferido contra opencode.ai/docs/permissions e /agents:
@@ -38,7 +46,7 @@ Conferido contra opencode.ai/docs/permissions e /agents:
 1. Em opencode a **última regra que casa vence**. Os padrões `git push *main*` e `git push *-f*` do rascunho inicial negariam pushes legítimos (`etapa/E1-T01-domain…` contém `main`; `…-fix` contém `-f`) porque vinham depois da regra `allow`. Substituídos por padrões ancorados em espaço: `git push * main`, `git push *--force*`, `git push * -f`.
 2. Agentes customizados recebem `"mode": "primary"` para poderem ser abertos como agente principal de um terminal (o padrão `all` também funciona; explícito evita ambiguidade).
 3. `.claude/settings.json`: acrescentadas negações equivalentes para `git push … --force`, `-f` e `main` em qualquer posição, pois `Bash(git push --force:*)` casa só por prefixo.
-4. Modelos usam `provider/model-id` (`opencode/…`). Segunda opinião: `opencode/nemotron-3-ultra-free` (substitui o "Jev 1.13 Free", inexistente).
+4. Modelos usam `provider/model-id` (`opencode/…`). Segunda opinião: `opencode/longcat-2.5-preview-free` (substitui o "Jev 1.13 Free", inexistente, e o Nemotron, descartado; ver tabela).
 
 ## Como abrir cada agente
 
@@ -51,7 +59,7 @@ opencode --agent qa             # QA
 opencode --agent segunda-opiniao  # Segunda opinião
 ```
 
-Cada Dev/Revisor/QA trabalha em um **worktree** próprio (`git worktree add ../psico-<papel> etapa/...`) para não disputar a pasta. Confirmar a flag com `opencode --help` se a versão mudar.
+Cada Dev/Revisor/QA trabalha em um **worktree** próprio, fora do repositório (`git worktree add ../pixel-perfect-capture-<papel> etapa/...`), para não disputar a pasta. Confirmar a flag com `opencode --help` se a versão mudar.
 
 ## Detalhe por papel
 
