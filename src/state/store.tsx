@@ -14,7 +14,7 @@ import type { Database } from "@/domain/types";
 interface StoreValue {
   db: Database;
   hydrated: boolean;
-  update: (fn: (db: Database) => Database) => boolean;
+  update: (fn: (db: Database) => Database) => Database;
   resetDemo: () => void;
 }
 
@@ -30,14 +30,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const update = useCallback((fn: (current: Database) => Database) => {
-    let persisted = false;
-    setDb((current) => {
-      const next = fn(current);
-      persisted = localRepository.save(next);
-      return persisted ? next : current;
-    });
-    return persisted;
-  }, []);
+    const next = fn(db);
+    const persisted = localRepository.save(next);
+    const applied = persisted ? next : db;
+    setDb(applied);
+    return applied;
+  }, [db]);
   const resetDemo = useCallback(() => {
     setDb(localRepository.reset());
   }, []);

@@ -60,8 +60,9 @@ export function CompanyPage() {
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const save = () => {
-    update((d) => ({ ...d, company, departments }));
+    const applied = update((d) => ({ ...d, company, departments }));
     setSaved(true);
+    setSaveError(applied === db);
     setTimeout(() => setSaved(false), 2500);
   };
   const changeDept = (id: string, field: keyof Department, value: string) =>
@@ -1201,9 +1202,13 @@ export function ActionsPage() {
     } catch (e) { setError(e instanceof Error ? e.message : "Não foi possível gerar sugestões."); } finally { setLoading(false); }
   };
   const approve = (requested: ActionSuggestion) => {
-    let approvalError: string | null = null;
-    update((d) => { const outcome = approveSuggestion(d, requested); approvalError = outcome.error; return outcome.error ? d : outcome.db; });
-    if (approvalError) setError(approvalError); else setError("");
+    const outcome = approveSuggestion(db, requested);
+    if (outcome.error) {
+      setError(outcome.error);
+      return;
+    }
+    update(() => outcome.db);
+    setError("");
   };  const changeStatus = (a: ActionPlanItem, status: ActionPlanItem["status"]) =>
     update((d) => ({
       ...d,
