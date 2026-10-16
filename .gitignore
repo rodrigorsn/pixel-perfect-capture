@@ -33,3 +33,6 @@ dist-ssr
 
 # Maestri: log ao vivo (fora do git)
 .maestri/
+
+# Maestri: diffs normalizados de revisao
+tmp/
