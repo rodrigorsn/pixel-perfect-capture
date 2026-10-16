@@ -24,6 +24,25 @@ describe("resultados da campanha", () => {
     ).toBe(true);
   });
 
+  it("nunca isola um único grupo suprimido por dimensão", () => {
+    const db = createDemoDatabase();
+    const campaign = db.campaigns[0];
+    if (!campaign) throw new Error("Campanha demonstrativa ausente");
+
+    const results = campaignResults(db, campaign);
+    const instrument = campaign.instrumentSnapshot ?? db.instruments.find((i) => i.id === campaign.instrumentId);
+    if (!instrument) throw new Error("Instrumento ausente");
+
+    for (const dimension of instrument.dimensions) {
+      const statuses = results.map((result) => ({
+        scopeId: result.scopeId,
+        suppressed: result.dimensions.find((d) => d.dimensionId === dimension.id)?.status === "suprimido_privacidade",
+      }));
+      const suppressedCount = statuses.filter((s) => s.suppressed).length;
+      expect(suppressedCount === 0 || suppressedCount >= 2).toBe(true);
+    }
+  });
+
   it("calcula somente com o snapshot congelado da campanha", () => {
     const db = createDemoDatabase();
     const campaign = db.campaigns[0];
