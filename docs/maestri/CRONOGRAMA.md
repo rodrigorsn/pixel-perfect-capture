@@ -60,7 +60,7 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E4-T03 respostas gravadas no servidor (D)
   - E4-T04 unicidade sem rastrear a pessoa (D)
   - E4-T05 agregação e supressão no servidor (D)
-- **Pronto:** revisão de anonimato aprovada; **a partir daqui, só modelos pagos**.
+- **Pronto:** revisão de anonimato aprovada; .
 - **Roteiro:** enviar 4 e depois 6 respostas e conferir a supressão.
 
 ## E5 — Login e multiempresa (30/nov–04/dez)
