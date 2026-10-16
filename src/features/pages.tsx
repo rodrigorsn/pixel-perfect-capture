@@ -1750,7 +1750,7 @@ export function MethodologyPage() {
           <Field label="Mínimo de respostas válidas por grupo">
             <Input
               type="number"
-              min="2"
+              min="5"
               max="100"
               value={db.settings.minGroupSize}
               onChange={(e) =>
@@ -1758,7 +1758,7 @@ export function MethodologyPage() {
                   ...d,
                   settings: {
                     ...d.settings,
-                    minGroupSize: Math.max(2, Number(e.target.value) || 2),
+                    minGroupSize: Math.max(5, Number(e.target.value) || 5),
                   },
                 }))
               }
