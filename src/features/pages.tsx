@@ -764,7 +764,9 @@ export function ResultsPage() {
                     <td className="cell-strong">{d.dimensionName}</td>
                     <td>{r.suppressed ? "—" : (d.score?.toFixed(1) ?? "—")}</td>
                     <td>
-                      {r.suppressed ? "—" : `${d.validRespondents} / ${d.eligibleRespondents}`}
+                      {r.suppressed || d.status === "suprimido_privacidade"
+                        ? "—"
+                        : `${d.validRespondents} / ${d.eligibleRespondents}`}
                     </td>
                     <td>
                       <span className={`status ${d.score !== null ? "neutral" : "warning"}`}>
