@@ -11,6 +11,19 @@ bun run dev
 
 Abra `http://localhost:8080`. Requer Node/Bun compatível com o projeto TanStack Start. O comando de build é `bun run build`.
 
+## Como trabalhamos
+
+Cada tarefa segue **Maestro → Dev → Revisor → (Segunda opinião, só E0–E2) → QA → Maestro → Rodrigo**, em uma branch `etapa/<ETAPA>-T<NN>-slug` e em um worktree próprio fora do repositório (`../pixel-perfect-capture-<papel>`). Só o Rodrigo faz merge, pelo PR, com test, typecheck e build verdes. Se a `main` mudar, atualize a branch com `git merge main` (nunca rebase). Plano, papéis e regras: [docs/maestri/CRONOGRAMA.md](docs/maestri/CRONOGRAMA.md) e [docs/maestri/PAPEIS.md](docs/maestri/PAPEIS.md).
+
+```bash
+bun run test:unit && bun run typecheck && bun run build   # verificação de toda tarefa
+bun run test:e2e                                       # fluxo ponta a ponta (Playwright)
+bun run task                                         # muda estado de tarefa (após a FASE B)
+bun run status                                       # gera o STATUS (após a FASE B)
+```
+
+O log ao vivo fica em `.maestri/eventos.jsonl` (fora do git). Ao fechar a etapa, ele é copiado para `docs/maestri/historico/` e vai no PR "<ETAPA> — fechamento".
+
 ## O que funciona
 
 - Edição da empresa e setores; campanhas com criação, edição de rascunhos, abertura, encerramento, análise e finalização.

@@ -31,6 +31,14 @@ Regras de modelos: gratuitos só até a E3; da E4 em diante, só pagos. IDs conf
 - Segunda opinião sai do fluxo ao fim da E2; antes, o Maestro mostra quantas vezes ela apontou algo útil.
 - Não começar etapa nova sem a anterior aprovada.
 
+## Operação: log, fechamento de etapa, pareceres e sincronização
+
+1. **Log ao vivo fora do git.** `eventos.jsonl` fica em `.maestri/eventos.jsonl` na pasta principal (`.maestri/` está no `.gitignore`). `plano.json` continua em `docs/maestri/` (versionado).
+2. **Fechamento de etapa.** Ao fechar cada etapa, copie o log para `docs/maestri/historico/<ETAPA>-eventos.jsonl`, rode `bun run status` e inclua tudo no PR **"<ETAPA> — fechamento"**, junto com o `VALIDACOES.md`. Depois do merge do Rodrigo, o Maestro cria a tag `etapa-<ETAPA>`.
+3. **Pareceres.** Revisor e Segunda opinião publicam o parecer como comentário no PR da tarefa com `gh pr comment`. (Pendência: o `gh` ainda não está instalado nesta máquina; até lá, o parecer vai no PR pelo link do GitHub.)
+4. **Main mudou** (ex.: edição no Lovable): os agentes atualizam a própria branch com `git merge main`, **nunca com rebase**.
+5. **Worktrees dos agentes** ficam fora do repositório: `../pixel-perfect-capture-<papel>`.
+
 ## Notas sobre as permissões (divergências da sintaxe documentada)
 
 Conferido contra opencode.ai/docs/permissions e /agents:
@@ -51,7 +59,7 @@ opencode --agent qa             # QA
 opencode --agent segunda-opiniao  # Segunda opinião
 ```
 
-Cada Dev/Revisor/QA trabalha em um **worktree** próprio (`git worktree add ../psico-<papel> etapa/...`) para não disputar a pasta. Confirmar a flag com `opencode --help` se a versão mudar.
+Cada Dev/Revisor/QA trabalha em um **worktree** próprio, fora do repositório (`git worktree add ../pixel-perfect-capture-<papel> etapa/...`), para não disputar a pasta. Confirmar a flag com `opencode --help` se a versão mudar.
 
 ## Detalhe por papel
 
