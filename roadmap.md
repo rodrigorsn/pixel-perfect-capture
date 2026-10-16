@@ -1,5 +1,7 @@
 # PsicoGestão NR-1 — entrega demonstrativa
 
+> O plano vigente (etapas E0–E7, datas e critérios) está em [docs/maestri/CRONOGRAMA.md](docs/maestri/CRONOGRAMA.md). Este arquivo registra só a entrega demonstrativa inicial.
+
 - [x] Domínio, dados fictícios reproduzíveis e persistência local
 - [x] Campanhas, questionário separado e cálculo agregado
 - [x] Avaliação de riscos, sugestões simuladas e aprovação humana
