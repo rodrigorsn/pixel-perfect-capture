@@ -188,3 +188,10 @@ export const DEFAULT_SOURCES: MethodologySource[] = [
       "Estudos não consultados. Nenhum ponto de corte foi importado para o protótipo.",
   },
 ];
+
+export function isInstrumentEligible(instrument: InstrumentVersion): boolean {
+  const integrity = instrument.rulesVersion.trim() !== "" && instrument.options.length > 0 && instrument.dimensions.length > 0 && instrument.questions.length > 0 && instrument.questions.every((question) => instrument.dimensions.some((dimension) => dimension.id === question.dimensionId)) && instrument.dimensions.every((dimension) => dimension.minValidItems > 0);
+  if (!integrity) return false;
+  if (instrument.status === "demonstrativo") return instrument.id === DEMO_INSTRUMENT.id;
+  return instrument.status === "validado" && instrument.publishable && instrument.documentVerified;
+}

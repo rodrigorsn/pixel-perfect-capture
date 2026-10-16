@@ -11,6 +11,24 @@ bun run dev
 
 Abra `http://localhost:8080`. Requer Node/Bun compatível com o projeto TanStack Start. O comando de build é `bun run build`.
 
+## Verificações automatizadas
+
+```bash
+bun run test:unit
+bunx playwright install chromium
+bun run test:e2e
+bun run typecheck
+bun run lint
+bun run build
+```
+
+Os testes unitários e de integração cobrem cálculo por dimensão com participantes válidos, ausências e valores inválidos, limiares de privacidade e supressão complementar, isolamento do snapshot do instrumento, elegibilidade de instrumentos pendentes, recuperação/falha da persistência local, escopo do provedor e aprovação idempotente. O Playwright usa três cenários locais e fictícios: um cenário composto percorre os sete fluxos críticos, e dois cenários independentes verificam bloqueio COPSOQ pendente e aprovação sem duplicidade.
+
+O Playwright usa o Chrome instalado no caminho padrão do Windows quando
+disponível; nos demais ambientes, usa o Chromium instalado pelo próprio
+Playwright. Artefatos de falha ficam em `test-results/` e
+`playwright-report/`, ambos ignorados pelo Git.
+
 ## Como trabalhamos
 
 Cada tarefa segue **Maestro → Dev → Revisor → (Segunda opinião, só E0–E2) → QA → Maestro → Rodrigo**, em uma branch `etapa/<ETAPA>-T<NN>-slug` e em um worktree próprio fora do repositório (`../pixel-perfect-capture-<papel>`). Só o Rodrigo faz merge, pelo PR, com test, typecheck e build verdes. Se a `main` mudar, atualize a branch com `git merge main` (nunca rebase). Plano, papéis e regras: [docs/maestri/CRONOGRAMA.md](docs/maestri/CRONOGRAMA.md) e [docs/maestri/PAPEIS.md](docs/maestri/PAPEIS.md).

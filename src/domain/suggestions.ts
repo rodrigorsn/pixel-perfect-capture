@@ -12,6 +12,8 @@ export interface SuggestionContextRisk {
   hazard: string;
   situationDescription: string;
   departmentName: string | null;
+  campaignId: string;
+  departmentId: string | null;
   reviewStage: RiskAssessment["reviewStage"];
   classification: RiskAssessment["classification"];
   existingMeasures: string;
@@ -23,7 +25,7 @@ export interface SuggestionContext {
   activityContext: string;
   risks: SuggestionContextRisk[];
   /** Somente resultados agregados permitidos pela política de privacidade. */
-  aggregatedResults: Array<Pick<DimensionResult, "dimensionName" | "status" | "score">>;
+  aggregatedResults: Array<Pick<DimensionResult, "dimensionName" | "status" | "score"> & { campaignId: string; departmentId: string }>;
   evidenceAndLimitations: string;
   resourcesAndConstraints: string;
 }
@@ -35,8 +37,7 @@ export interface SuggestionProvider {
   generate(context: SuggestionContext): Promise<ActionSuggestion[]>;
 }
 
-export const SIMULATION_NOTICE =
-  "Sugestões simuladas — integração com IA ainda não conectada.";
+export const SIMULATION_NOTICE = "Sugestões simuladas — integração com IA ainda não conectada.";
 
 const ORG_TEMPLATES: Array<{
   match: RegExp;
@@ -150,6 +151,10 @@ export const demoSuggestionProvider: SuggestionProvider = {
   label: "Provedor demonstrativo local",
   simulated: true,
   async generate(context) {
+    const scopes = new Set(context.risks.map((risk) => `${risk.campaignId}:${risk.departmentId ?? ""}`));
+    if (scopes.size > 1) throw new Error("Sugestões devem usar riscos do mesmo escopo.");
+    const scope = context.risks[0] ? `${context.risks[0].campaignId}:${context.risks[0].departmentId ?? ""}` : null;
+    if (scope && context.aggregatedResults.some((result) => `${result.campaignId}:${result.departmentId}` !== scope)) throw new Error("Resultados agregados fora do mesmo escopo.");
     await new Promise((r) => setTimeout(r, 700));
     if (context.risks.length === 0) {
       throw new Error("Selecione ao menos um risco para gerar sugestões.");
@@ -164,8 +169,7 @@ export const demoSuggestionProvider: SuggestionProvider = {
         missing.push("Medidas de controle já existentes para este risco.");
       if (!risk.exposure.trim())
         missing.push("Caracterização da exposição (frequência e duração).");
-      if (exploratory)
-        missing.push("Conclusão da avaliação do risco com critérios definidos.");
+      if (exploratory) missing.push("Conclusão da avaliação do risco com critérios definidos.");
       if (!context.resourcesAndConstraints.trim())
         missing.push("Recursos e restrições disponíveis para implementação.");
 
@@ -178,6 +182,8 @@ export const demoSuggestionProvider: SuggestionProvider = {
       return {
         id: `sug-${Date.now()}-${i}`,
         riskIds: [risk.id],
+        campaignId: risk.campaignId,
+        departmentId: risk.departmentId,
         title: tpl.title,
         measure: tpl.measure,
         rationale: `Baseado no registro ${risk.code} — ${risk.situationDescription || risk.hazard}${
@@ -205,6 +211,7 @@ export const demoSuggestionProvider: SuggestionProvider = {
         rejectionReason: null,
         generatedAt: now,
         provider: "demo-local",
+        generatedProposal: null,
       } satisfies ActionSuggestion;
     });
   },
