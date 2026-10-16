@@ -12,7 +12,8 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E0-T03 scripts `test` e `typecheck` na `main` (D)
   - E0-T04 CI GitHub Actions: test + typecheck + build (D)
   - E0-T05 teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash na mesma tarefa; Revisor compara; vencedor vira Dev até a E2 (D, R, M)
-  - E0-T06 decidir destino do trabalho local não commitado (ver STATUS) (P, M)
+  - E0-T06 decidir destino do trabalho local não commitado: preservado em `etapa/E0-T03-baseline-local` (P, M)
+  - E0-T07 desvincular do Lovable: vite.config próprio, sem telemetria, lock no npm público (D) — branch `etapa/E0-T07-desvincular-lovable`, empilhada sobre a E0-T03
 - **Pronto:** CI verde na `main`; VALIDACOES registra o vencedor do teste.
 - **Roteiro (5 min):** `git clone` → `bun install` → `bun run test && bun run typecheck && bun run build`; abrir a aba Actions e ver o run verde.
 
@@ -47,7 +48,6 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E3-T02 schema Prisma + RLS/isolamento (D)
   - E3-T03 adaptador do repository sobre Prisma, domínio portado sem alteração (D)
   - E3-T04 migração dos dados demo (D)
-  - E3-T05 remover acoplamento ao Lovable (D)
 - **Pronto:** e2e da E2 verde contra o adaptador.
 - **Roteiro:** criar empresa no Chrome, abrir no Firefox e ver a mesma.
 

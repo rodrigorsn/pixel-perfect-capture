@@ -31,4 +31,4 @@ Executado em duas árvores: `origin/main` (clone limpo) e a pasta de trabalho lo
 ## Pendências
 
 - `gh` CLI não está instalado: PRs são abertos pelo link do GitHub.
-- Confirmar se a sincronização com o Lovable termina na E3.
+- E0-T07 (desvincular do Lovable) feita em `etapa/E0-T07-desvincular-lovable`, empilhada sobre `etapa/E0-T03-baseline-local`: merge nessa ordem. Falta Rodrigo desconectar o projeto no painel do Lovable e revogar o GitHub App.

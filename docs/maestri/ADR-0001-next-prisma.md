@@ -14,7 +14,7 @@ Migrar para **Next.js + Prisma** (padrão dos demais projetos), mantendo o domí
 - O schema Prisma deve respeitar os invariantes do HANDOFF (anonimato, agregação, supressão, congelamento do instrumento) e a skill `invariantes-nr1`.
 - E2 (Playwright) vira a rede de segurança da migração: o e2e precisa passar igual antes e depois.
 - E3-T01 deixa de ser "decidir" e passa a ser "plano de migração + scaffolding Next.js".
-- Tarefa extra E3-T05: remover o acoplamento ao Lovable (`@lovable.dev/*`, registro `europe-west1-npm.pkg.dev`, `lovable-error-reporting`).
+- O acoplamento ao Lovable (`@lovable.dev/*`, registro `europe-west1-npm.pkg.dev`, `lovable-error-reporting`) foi removido antes, na E0-T07.
 
 ## Riscos
-- O repo é sincronizado com o Lovable; a migração deve acontecer em branch `etapa/E3-*` e só entrar na `main` com e2e verde. Confirmar com o Rodrigo se a sincronização com o Lovable será encerrada na E3.
+- A migração deve acontecer em branch `etapa/E3-*` e só entrar na `main` com e2e verde.
