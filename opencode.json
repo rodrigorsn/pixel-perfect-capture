@@ -56,7 +56,7 @@
     "segunda-opiniao": {
       "description": "Parecer independente após o Revisor, somente nas etapas E0–E2. Somente leitura.",
       "mode": "primary",
-      "model": "opencode/nemotron-3-ultra-free",
+      "model": "opencode/longcat-2.5-preview-free",
       "permission": {
         "edit": "deny",
         "bash": { "*": "deny", "git diff*": "allow", "git log*": "allow", "git show*": "allow" }
