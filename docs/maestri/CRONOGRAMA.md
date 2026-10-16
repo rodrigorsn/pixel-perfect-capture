@@ -26,6 +26,8 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E1-T03 privacy: mínimo do grupo + supressão complementar (D)
   - E1-T04 suggestions: nunca aprova sozinho, nunca recebe dado individual (D)
   - E1-T05 congelamento do instrumento na abertura da campanha (D)
+  - E1-T06 gate `hydrated` em todas as páginas que gravam, incluindo `ReportsPage` (`pages.tsx` ~1855), para não persistir o payload de demonstração (D) — achado menor da revisão do PR #3
+  - E1-T07 risco criado sem campanha de origem (`originCampaignId: null`): avisar no cadastro, não só na geração de sugestões (`pages.tsx` ~827, ~1191) (D) — achado menor da revisão do PR #3
 - **Pronto:** casos de borda cobertos; Revisor aprova invariantes.
 - **Roteiro:** `bun run test` → ver os arquivos calc/privacy/suggestions/instruments verdes; quebrar um limiar de propósito e ver o teste falhar.
 
