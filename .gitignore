@@ -32,3 +32,6 @@ test-results/
 *.njsproj
 *.sln
 *.sw?
+
+# Maestri: log ao vivo (fora do git)
+.maestri/
