@@ -60,8 +60,9 @@ export function CompanyPage() {
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const save = () => {
-    update((d) => ({ ...d, company, departments }));
+    const applied = update((d) => ({ ...d, company, departments }));
     setSaved(true);
+    setSaveError(applied === db);
     setTimeout(() => setSaved(false), 2500);
   };
   const changeDept = (id: string, field: keyof Department, value: string) =>
@@ -764,7 +765,9 @@ export function ResultsPage() {
                     <td className="cell-strong">{d.dimensionName}</td>
                     <td>{r.suppressed ? "—" : (d.score?.toFixed(1) ?? "—")}</td>
                     <td>
-                      {r.suppressed ? "—" : `${d.validRespondents} / ${d.eligibleRespondents}`}
+                      {r.suppressed || d.status === "suprimido_privacidade"
+                        ? "—"
+                        : `${d.validRespondents} / ${d.eligibleRespondents}`}
                     </td>
                     <td>
                       <span className={`status ${d.score !== null ? "neutral" : "warning"}`}>
@@ -1199,9 +1202,13 @@ export function ActionsPage() {
     } catch (e) { setError(e instanceof Error ? e.message : "Não foi possível gerar sugestões."); } finally { setLoading(false); }
   };
   const approve = (requested: ActionSuggestion) => {
-    let approvalError: string | null = null;
-    update((d) => { const outcome = approveSuggestion(d, requested); approvalError = outcome.error; return outcome.error ? d : outcome.db; });
-    if (approvalError) setError(approvalError); else setError("");
+    const outcome = approveSuggestion(db, requested);
+    if (outcome.error) {
+      setError(outcome.error);
+      return;
+    }
+    update(() => outcome.db);
+    setError("");
   };  const changeStatus = (a: ActionPlanItem, status: ActionPlanItem["status"]) =>
     update((d) => ({
       ...d,
@@ -1743,7 +1750,7 @@ export function MethodologyPage() {
           <Field label="Mínimo de respostas válidas por grupo">
             <Input
               type="number"
-              min="2"
+              min="5"
               max="100"
               value={db.settings.minGroupSize}
               onChange={(e) =>
@@ -1751,7 +1758,7 @@ export function MethodologyPage() {
                   ...d,
                   settings: {
                     ...d.settings,
-                    minGroupSize: Math.max(2, Number(e.target.value) || 2),
+                    minGroupSize: Math.max(5, Number(e.target.value) || 5),
                   },
                 }))
               }

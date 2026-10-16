@@ -69,6 +69,7 @@ Protótipo demonstrativo com arquitetura desacoplada, persistência local em `lo
 3. **Provedor Real de IA (LLMs)**:
    - Implementar o contrato `SuggestionProvider` em serviço backend seguro.
    - Enviar apenas metadados agregados e descrições de riscos avaliados (nunca dados brutos de respostas).
+   - **Risco de prompt injection**: o campo de texto livre "Recursos e restrições" em `ActionsPage` (`src/features/pages.tsx`) é enviado ao provedor no campo `resourcesAndConstraints`. Hoje o provedor é simulado localmente (`demoSuggestionProvider`), portanto o vetor é inofensivo. Ao conectar um LLM real (E3+), esse campo deve ser tratado como entrada não confiável: aplicar limites rígidos de tamanho, sanitização de conteúdo, escaping de delimitadores de instrução e revisão humana obrigatória antes de qualquer ação derivada. Nunca enviar dados individuais de resposta ou identificadores de trabalhadores.
 4. **Relatórios e Acessibilidade**:
    - Suporte a download direto em PDF gerado no servidor.
    - Auditoria de acessibilidade WCAG 2.1 AA em todo o fluxo de resposta e painel administrativo.

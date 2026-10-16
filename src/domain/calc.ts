@@ -21,7 +21,7 @@ export function calculateScope(params: { campaignId: string; scopeId: string; sc
     const perRespondent: number[] = []; let answeredItems = 0;
     for (const response of responses) { const values: number[] = []; for (const item of items) { const raw = response.answers[item.id]; if (raw === null || raw === undefined) continue; answeredItems += 1; values.push(scoreItem(raw, instrument.options, item.reverse)); } if (values.length >= dim.minValidItems) perRespondent.push(values.reduce((a, b) => a + b, 0) / values.length); }
     const privacySuppressed = options.suppressedDimensionIds?.has(dim.id) ?? isSuppressed(perRespondent.length, options.minGroupSize);
-    if (privacySuppressed) return { ...base, answeredItems, validRespondents: perRespondent.length, status: "suprimido_privacidade" };
+    if (privacySuppressed) return { ...base, answeredItems, validRespondents: 0, eligibleRespondents: 0, status: "suprimido_privacidade" };
     if (perRespondent.length < minRespondents) return { ...base, answeredItems, validRespondents: perRespondent.length, status: "dados_insuficientes", note: `Apenas ${perRespondent.length} participante(s) atenderam ao mínimo de itens respondidos desta dimensão (mínimo de ${minRespondents}).` };
     const score = perRespondent.reduce((a, b) => a + b, 0) / perRespondent.length;
     return { ...base, answeredItems, validRespondents: perRespondent.length, score: Math.round(score * 10) / 10, status: instrument.interpretationReference ? "calculado" : "interpretacao_pendente", note: dim.direction === "maior_pior" ? "Escala em que pontuação maior indica situação mais desfavorável." : "Escala em que pontuação maior indica situação mais favorável." };
