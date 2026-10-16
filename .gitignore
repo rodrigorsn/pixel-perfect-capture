@@ -35,3 +35,6 @@ test-results/
 
 # Maestri: log ao vivo (fora do git)
 .maestri/
+
+# Referências de terceiros (não versionar)
+docs/referencias/privadas/
