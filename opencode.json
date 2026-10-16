@@ -1,0 +1,66 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "*": "ask",
+    "read": "allow", "glob": "allow", "grep": "allow", "lsp": "allow",
+    "edit": "allow", "webfetch": "allow", "websearch": "allow",
+    "external_directory": "deny",
+    "bash": {
+      "*": "ask",
+      "bun *": "allow", "bunx *": "allow", "ls*": "allow",
+      "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
+      "git branch*": "allow", "git switch *": "allow", "git checkout -b *": "allow",
+      "git add *": "allow", "git commit -m *": "allow", "git fetch*": "allow", "git worktree *": "allow",
+      "git push origin etapa/*": "allow",
+      "git push * main": "deny", "git push * main *": "deny", "git push * HEAD:main*": "deny",
+      "git push *--force*": "deny", "git push -f *": "deny", "git push * -f": "deny", "git push * -f *": "deny",
+      "git reset --hard*": "deny", "git rebase*": "deny", "git commit --amend*": "deny",
+      "rm -rf*": "deny"
+    }
+  },
+  "agent": {
+    "dev": {
+      "description": "Implementa uma tarefa por vez, com testes, na própria branch etapa/*",
+      "mode": "primary",
+      "model": "opencode/kimi-k2.7-code"
+    },
+    "revisor": {
+      "description": "Revisa branches: correção, invariantes de anonimato, simplicidade. Somente leitura.",
+      "mode": "primary",
+      "model": "opencode/gpt-6.1-sol",
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
+          "git fetch*": "allow", "bun run test*": "allow", "bun run typecheck*": "allow",
+          "bunx vitest*": "allow", "bun run task*": "allow"
+        }
+      }
+    },
+    "qa": {
+      "description": "Roda test, typecheck, build e e2e e reporta evidências ao Maestro. Não edita código.",
+      "mode": "primary",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "ask",
+          "bun *": "allow", "bunx *": "allow", "ls*": "allow",
+          "git status*": "allow", "git diff*": "allow", "git log*": "allow",
+          "git switch *": "allow", "git fetch*": "allow",
+          "git push*": "deny", "git commit*": "deny", "rm -rf*": "deny"
+        }
+      }
+    },
+    "segunda-opiniao": {
+      "description": "Parecer independente após o Revisor, somente nas etapas E0–E2. Somente leitura.",
+      "mode": "primary",
+      "model": "PENDENTE-jev-1.13-free",
+      "permission": {
+        "edit": "deny",
+        "bash": { "*": "deny", "git diff*": "allow", "git log*": "allow", "git show*": "allow" }
+      }
+    }
+  }
+}
