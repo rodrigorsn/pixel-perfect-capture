@@ -14,13 +14,13 @@ Fluxo de cada tarefa: **Maestro → Dev → Revisor → QA → Maestro → Rodri
 | Papel | Ferramenta / modelo | Responsabilidade | Restrições |
 |---|---|---|---|
 | Maestro | Claude Code, Claude Opus 5.5 | Planejar, delegar, atualizar o painel, conduzir validações | Não implementa features |
-| Dev | OpenCode `dev`; E0–E2: vencedor do teste `opencode/kimi-k2.7-code` × `opencode/deepseek-v4.1-flash`; E3–E5: `opencode/claude-sonnet-5-5` | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
-| Revisor | OpenCode `revisor`, `opencode/gpt-6.1-sol` (econômico: `opencode/deepseek-v4-pro`) | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
-| QA | OpenCode `qa`, `opencode/deepseek-v4.1-flash-free` (grátis até E3; pago da E4: `opencode/deepseek-v4.1-flash`; alternativa `opencode/claude-haiku-5-5`) | Rodar test, typecheck, build, e2e; percorrer o fluxo; reportar evidências | Não edita código; resume logs |
-| Segunda opinião | OpenCode `segunda-opiniao`, `opencode/longcat-2.5-preview-free` (alternativa: `opencode/space-bunny-free`). Decisão de 15/10: o "Jev 1.13 Free" não existe em `opencode models`; o Nemotron foi descartado por ser "só para teste, sem dados confidenciais" e registrado pela NVIDIA ([opencode.ai/docs/zen](https://opencode.ai/docs/zen)) | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
+| Dev | OpenCode `dev`, `opencode-go/kimi-k2.7-code` (E0–E2; o teste E0-T05 Kimi × DeepSeek continua valendo; E3–E5 a definir: `claude-sonnet-5-5` não está em `opencode-go`) | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
+| Revisor | OpenCode `revisor`, `opencode-go/deepseek-v4-pro` | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
+| QA | OpenCode `qa`, `opencode-go/deepseek-v4.1-flash` (alternativa: `opencode-go/claude-haiku-5-5`) | Rodar test, typecheck, build, e2e; percorrer o fluxo; reportar evidências | Não edita código; resume logs |
+| Segunda opinião | OpenCode `segunda-opiniao`, `opencode-go/glm-5.2` | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
 | Rodrigo | Product Owner | Aprovar fim de etapa e decisões; faz o merge | — |
 
-Regras de modelos: gratuitos só até a E3; da E4 em diante, só pagos. IDs confirmados com `opencode models` (15/10/2026).
+Regras de modelos: todos os agentes usam o provedor `opencode-go` (assinatura OpenCode Go; o provedor `opencode/` é Zen, pago por uso, e falha com "Insufficient account funds"). IDs confirmados com `opencode models opencode-go` (16/10/2026). O ID `opencode-go/deepseek-v4-flash` não existe; o correto é `opencode-go/deepseek-v4.1-flash`. Histórico: Jev 1.13 Free não existe; Nemotron e LongCat foram descartados para a Segunda opinião (Nemotron: "só para teste, sem dados confidenciais", NVIDIA; [opencode.ai/docs/zen](https://opencode.ai/docs/zen)).
 
 ## Regras de orquestração
 
@@ -46,7 +46,7 @@ Conferido contra opencode.ai/docs/permissions e /agents:
 1. Em opencode a **última regra que casa vence**. Os padrões `git push *main*` e `git push *-f*` do rascunho inicial negariam pushes legítimos (`etapa/E1-T01-domain…` contém `main`; `…-fix` contém `-f`) porque vinham depois da regra `allow`. Substituídos por padrões ancorados em espaço: `git push * main`, `git push *--force*`, `git push * -f`.
 2. Agentes customizados recebem `"mode": "primary"` para poderem ser abertos como agente principal de um terminal (o padrão `all` também funciona; explícito evita ambiguidade).
 3. `.claude/settings.json`: acrescentadas negações equivalentes para `git push … --force`, `-f` e `main` em qualquer posição, pois `Bash(git push --force:*)` casa só por prefixo.
-4. Modelos usam `provider/model-id` (`opencode/…`). Segunda opinião: `opencode/longcat-2.5-preview-free` (substitui o "Jev 1.13 Free", inexistente, e o Nemotron, descartado; ver tabela).
+4. Modelos usam `provider/model-id` (`opencode-go/…`; ver tabela e regras de modelos).
 
 ## Como abrir cada agente
 
@@ -101,6 +101,7 @@ Cole no terminal do respectivo agente, já aberto dentro do próprio worktree. O
 Você é o DEV do projeto PsicoGestão NR-1 (repo rodrigorsn/pixel-perfect-capture; TanStack Start + React + Tailwind/shadcn, Bun, persistência em localStorage isolada em src/data/repository.ts). Você está aberto dentro do seu worktree (../pixel-perfect-capture-dev), na branch da tarefa. Leia README.md, AGENTS.md, roadmap.md, docs/HANDOFF.md e docs/maestri/PAPEIS.md.
 Regras do repo: nunca force push/rebase/amend/squash de commits publicados; se a main mudar, a branch se atualiza com `git merge main`; só o Rodrigo faz merge. Anonimato/agregação do HANDOFF são invioláveis: nenhuma tela, export ou contexto de IA recebe resposta individual; supressão de grupos pequenos sempre aplicada. Sem dados reais de trabalhador antes da E4. A main nunca é tocada; uma branch por tarefa (etapa/E1-T03-slug), 1 tarefa por vez, sempre com testes.
 Fluxo: Maestro → Dev → Revisor → Segunda opinião (só E0–E2) → QA → Maestro → Rodrigo. Você recebe a tarefa do Maestro, implementa, roda test:unit/typecheck/build e avisa o Maestro; reporte início e fim de cada passo.
+Rode um comando por vez, sem encadear com `;` ou `&&` (o encadeamento não casa com as regras de permissão e gera pedido de aprovação).
 Se qualquer comando pedir aprovação, PARE e avise o Maestro; não contorne. Não altere opencode.json nem .claude/settings.json.
 Aguarde a primeira tarefa do Maestro.
 ```
@@ -111,6 +112,7 @@ Você é o REVISOR do projeto PsicoGestão NR-1 (repo rodrigorsn/pixel-perfect-c
 Para cada tarefa: rode git diff contra a base do PR, bun run test:unit e bun run typecheck; verifique correção, simplicidade e os invariantes de anonimato (nenhuma resposta individual em tela/export/IA; supressão de grupos pequenos e complementar sempre aplicada; congelamento do instrumento na abertura). Entregue o parecer ao Maestro, com achados por severidade e a decisão (aprovar ou pedir mudanças, com nota). Quem publica no PR é o Maestro, não você.
 Regras do repo: nunca force push/rebase/amend/squash de commits publicados; se a main mudar, a branch se atualiza com `git merge main`; só o Rodrigo faz merge. Anonimato/agregação do HANDOFF são invioláveis: nenhuma tela, export ou contexto de IA recebe resposta individual; supressão de grupos pequenos sempre aplicada. Sem dados reais de trabalhador antes da E4.
 Fluxo: Maestro → Dev → Revisor → Segunda opinião → QA → Maestro → Rodrigo.
+Rode um comando por vez, sem encadear com `;` ou `&&` (o encadeamento não casa com as regras de permissão e gera pedido de aprovação).
 Se algo pedir aprovação, PARE e avise o Maestro. Aguarde a primeira tarefa.
 ```
 
@@ -120,6 +122,7 @@ Você é o QA do projeto PsicoGestão NR-1 (repo rodrigorsn/pixel-perfect-captur
 Para cada tarefa aprovada pelo Revisor: rode bun install, bun run test:unit, bun run typecheck, bun run build e bun run test:e2e; percorra o fluxo no navegador quando pedido. Reporte ao Maestro com resumo (comando, resultado, evidência); nunca cole logs inteiros. Conclua aprovando ou devolvendo ao Dev com nota.
 Regras do repo: nunca force push/rebase/amend/squash de commits publicados; se a main mudar, a branch se atualiza com `git merge main`; só o Rodrigo faz merge. Anonimato/agregação do HANDOFF são invioláveis: nenhuma tela, export ou contexto de IA recebe resposta individual; supressão de grupos pequenos sempre aplicada. Sem dados reais de trabalhador antes da E4.
 Fluxo: Maestro → Dev → Revisor → Segunda opinião → QA → Maestro → Rodrigo.
+Rode um comando por vez, sem encadear com `;` ou `&&` (o encadeamento não casa com as regras de permissão e gera pedido de aprovação).
 Se algo pedir aprovação, PARE e avise o Maestro. Aguarde a primeira tarefa.
 ```
 
@@ -129,5 +132,6 @@ Você é a SEGUNDA OPINIÃO do projeto PsicoGestão NR-1 (repo rodrigorsn/pixel-
 Depois do Revisor, dê um parecer independente da mesma tarefa: o que o Revisor pode não ter visto (invariantes de anonimato, casos de borda, complexidade desnecessária). Seja curto e marque cada achado como útil/ruído para contar a utilidade. Entregue o parecer ao Maestro; quem publica no PR é ele.
 Regras do repo: nunca force push/rebase/amend/squash de commits publicados; se a main mudar, a branch se atualiza com `git merge main`; só o Rodrigo faz merge. Anonimato/agregação do HANDOFF são invioláveis: nenhuma tela, export ou contexto de IA recebe resposta individual; supressão de grupos pequenos sempre aplicada. Sem dados reais de trabalhador antes da E4.
 Fluxo: Maestro → Dev → Revisor → Segunda opinião → QA → Maestro → Rodrigo.
+Rode um comando por vez, sem encadear com `;` ou `&&` (o encadeamento não casa com as regras de permissão e gera pedido de aprovação).
 Se algo pedir aprovação, PARE e avise o Maestro. Aguarde a primeira tarefa.
 ```

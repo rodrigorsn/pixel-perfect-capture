@@ -9,6 +9,7 @@
       "*": "ask",
       "bun *": "allow", "bunx *": "allow", "ls*": "allow",
       "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
+      "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
       "git branch*": "allow", "git switch *": "allow", "git checkout -b *": "allow",
       "git add *": "allow", "git commit -m *": "allow", "git fetch*": "allow", "git worktree *": "allow",
       "git push origin etapa/*": "allow",
@@ -22,18 +23,19 @@
     "dev": {
       "description": "Implementa uma tarefa por vez, com testes, na própria branch etapa/*",
       "mode": "primary",
-      "model": "opencode/kimi-k2.7-code"
+      "model": "opencode-go/kimi-k2.7-code"
     },
     "revisor": {
       "description": "Revisa branches: correção, invariantes de anonimato, simplicidade. Somente leitura.",
       "mode": "primary",
-      "model": "opencode/gpt-6.1-sol",
+      "model": "opencode-go/deepseek-v4-pro",
       "permission": {
         "edit": "deny",
         "bash": {
           "*": "deny",
           "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
-          "git fetch*": "allow", "bun run test*": "allow", "bun run typecheck*": "allow",
+          "git fetch*": "allow", "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
+          "bun run test*": "allow", "bun run typecheck*": "allow",
           "bunx vitest*": "allow", "bun run task*": "allow"
         }
       }
@@ -41,13 +43,14 @@
     "qa": {
       "description": "Roda test, typecheck, build e e2e e reporta evidências ao Maestro. Não edita código.",
       "mode": "primary",
-      "model": "opencode/deepseek-v4.1-flash-free",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "permission": {
         "edit": "deny",
         "bash": {
           "*": "ask",
           "bun *": "allow", "bunx *": "allow", "ls*": "allow",
-          "git status*": "allow", "git diff*": "allow", "git log*": "allow",
+          "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
+          "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
           "git switch *": "allow", "git fetch*": "allow",
           "git push*": "deny", "git commit*": "deny", "rm -rf*": "deny"
         }
@@ -56,10 +59,13 @@
     "segunda-opiniao": {
       "description": "Parecer independente após o Revisor, somente nas etapas E0–E2. Somente leitura.",
       "mode": "primary",
-      "model": "opencode/longcat-2.5-preview-free",
+      "model": "opencode-go/glm-5.2",
       "permission": {
         "edit": "deny",
-        "bash": { "*": "deny", "git diff*": "allow", "git log*": "allow", "git show*": "allow" }
+        "bash": {
+          "*": "deny", "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
+          "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow"
+        }
       }
     }
   }
