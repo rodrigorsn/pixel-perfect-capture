@@ -43,10 +43,11 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
 - **Objetivo:** banco com RLS substituindo o localStorage mantendo a interface do `repository`.
 - **Entregável:** dados persistem entre navegadores (empresa, setores, campanhas).
 - **Tarefas:**
-  - E3-T01 ADR: TanStack Start + Supabase direto × Next.js + Prisma (M, P decide)
-  - E3-T02 schema + RLS (D)
-  - E3-T03 adaptador do repository (D)
+  - E3-T01 plano de migração + scaffolding Next.js (ver [ADR-0001](ADR-0001-next-prisma.md): decidido Next.js + Prisma) (D, M)
+  - E3-T02 schema Prisma + RLS/isolamento (D)
+  - E3-T03 adaptador do repository sobre Prisma, domínio portado sem alteração (D)
   - E3-T04 migração dos dados demo (D)
+  - E3-T05 remover acoplamento ao Lovable (D)
 - **Pronto:** e2e da E2 verde contra o adaptador.
 - **Roteiro:** criar empresa no Chrome, abrir no Firefox e ver a mesma.
 

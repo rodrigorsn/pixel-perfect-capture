@@ -17,7 +17,7 @@ Fluxo de cada tarefa: **Maestro → Dev → Revisor → QA → Maestro → Rodri
 | Dev | OpenCode `dev`; E0–E2: vencedor do teste `opencode/kimi-k2.7-code` × `opencode/deepseek-v4.1-flash`; E3–E5: `opencode/claude-sonnet-5-5` | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
 | Revisor | OpenCode `revisor`, `opencode/gpt-6.1-sol` (econômico: `opencode/deepseek-v4-pro`) | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
 | QA | OpenCode `qa`, `opencode/deepseek-v4.1-flash-free` (grátis até E3; pago da E4: `opencode/deepseek-v4.1-flash`; alternativa `opencode/claude-haiku-5-5`) | Rodar test, typecheck, build, e2e; percorrer o fluxo; reportar evidências | Não edita código; resume logs |
-| Segunda opinião | OpenCode `segunda-opiniao`, "Jev 1.13 Free" (**ID não encontrado em `opencode models`; pendente**) | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
+| Segunda opinião | OpenCode `segunda-opiniao`, `opencode/nemotron-3-ultra-free` (decisão de 15/10: o "Jev 1.13 Free" não existe em `opencode models`) | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
 | Rodrigo | Product Owner | Aprovar fim de etapa e decisões; faz o merge | — |
 
 Regras de modelos: gratuitos só até a E3; da E4 em diante, só pagos. IDs confirmados com `opencode models` (15/10/2026).
@@ -38,7 +38,7 @@ Conferido contra opencode.ai/docs/permissions e /agents:
 1. Em opencode a **última regra que casa vence**. Os padrões `git push *main*` e `git push *-f*` do rascunho inicial negariam pushes legítimos (`etapa/E1-T01-domain…` contém `main`; `…-fix` contém `-f`) porque vinham depois da regra `allow`. Substituídos por padrões ancorados em espaço: `git push * main`, `git push *--force*`, `git push * -f`.
 2. Agentes customizados recebem `"mode": "primary"` para poderem ser abertos como agente principal de um terminal (o padrão `all` também funciona; explícito evita ambiguidade).
 3. `.claude/settings.json`: acrescentadas negações equivalentes para `git push … --force`, `-f` e `main` em qualquer posição, pois `Bash(git push --force:*)` casa só por prefixo.
-4. Modelos usam `provider/model-id` (`opencode/…`). O modelo da segunda opinião está como `PENDENTE-jev-1.13-free` até o ID ser confirmado.
+4. Modelos usam `provider/model-id` (`opencode/…`). Segunda opinião: `opencode/nemotron-3-ultra-free` (substitui o "Jev 1.13 Free", inexistente).
 
 ## Como abrir cada agente
 

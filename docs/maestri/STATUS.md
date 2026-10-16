@@ -21,10 +21,14 @@ Executado em duas árvores: `origin/main` (clone limpo) e a pasta de trabalho lo
 3. **403 no registro privado não reproduzido aqui.** O `bun.lock` aponta 19 URLs para `europe-west1-npm.pkg.dev` (registro do Lovable) e a instalação funcionou nesta máquina. Pode falhar em CI ou outra máquina; E0-T01 precisa testar isso (ex.: runner do GitHub Actions).
 4. **IDs de modelo:** todos confirmados em `opencode models`, exceto "Jev 1.13 Free" (não existe na lista). `opencode.json` tem `PENDENTE-jev-1.13-free` nesse agente.
 
-## Pendências de decisão (Rodrigo)
+## Decisões (15/10/2026)
 
-- (a) E3: TanStack Start + Supabase direto × Next.js + Prisma.
-- (b) Datas do cronograma.
-- (c) Destino do trabalho local não commitado.
-- (d) Qual é o modelo real da segunda opinião.
-- (e) `gh` CLI não está instalado: PRs são abertos pelo link do GitHub.
+- (a) E3: **Next.js + Prisma** — ver [ADR-0001](ADR-0001-next-prisma.md).
+- (b) Datas mantidas; trabalho local mantido (interpretação do Maestro; Rodrigo confirma).
+- (c) Trabalho local preservado na branch `etapa/E0-T03-baseline-local` e submetido a Revisor + QA antes de entrar na main.
+- (d) Segunda opinião: `opencode/nemotron-3-ultra-free`.
+
+## Pendências
+
+- `gh` CLI não está instalado: PRs são abertos pelo link do GitHub.
+- Confirmar se a sincronização com o Lovable termina na E3.
