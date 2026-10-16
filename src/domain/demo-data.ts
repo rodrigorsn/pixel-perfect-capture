@@ -172,9 +172,7 @@ function buildResponses(): AnonymousResponse[] {
         departmentId: dep.id,
         instrumentId: DEMO_INSTRUMENT.id,
         rulesVersion: DEMO_INSTRUMENT.rulesVersion,
-        submittedAt: new Date(
-          Date.parse("2026-03-04T09:00:00.000Z") + n * 3600_000,
-        ).toISOString(),
+        submittedAt: new Date(Date.parse("2026-03-04T09:00:00.000Z") + n * 3600_000).toISOString(),
         answers,
       });
     }
@@ -332,15 +330,15 @@ export function createDemoDatabase(): Database {
       responsibleName: "Rodrigo Nascimento",
       responsibleRole: "Coordenação de Saúde e Segurança do Trabalho",
     },
-    departments,
-    instruments: DEFAULT_INSTRUMENTS,
-    campaigns: [campaign, draftCampaign],
+    departments: structuredClone(departments),
+    instruments: structuredClone(DEFAULT_INSTRUMENTS),
+    campaigns: structuredClone([campaign, draftCampaign]),
     responses: buildResponses(),
-    risks,
+    risks: structuredClone(risks),
     suggestions: [],
-    actions,
+    actions: structuredClone(actions),
     reports: [],
-    sources: DEFAULT_SOURCES,
+    sources: structuredClone(DEFAULT_SOURCES),
     settings: { minGroupSize: DEFAULT_MIN_GROUP_SIZE, demoMode: true },
   };
 }

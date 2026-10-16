@@ -11,6 +11,24 @@ bun run dev
 
 Abra `http://localhost:8080`. Requer Node/Bun compatível com o projeto TanStack Start. O comando de build é `bun run build`.
 
+## Verificações automatizadas
+
+```bash
+bun run test:unit
+bunx playwright install chromium
+bun run test:e2e
+bun run typecheck
+bun run lint
+bun run build
+```
+
+Os testes unitários e de integração cobrem cálculo por dimensão com participantes válidos, ausências e valores inválidos, limiares de privacidade e supressão complementar, isolamento do snapshot do instrumento, elegibilidade de instrumentos pendentes, recuperação/falha da persistência local, escopo do provedor e aprovação idempotente. O Playwright usa três cenários locais e fictícios: um cenário composto percorre os sete fluxos críticos, e dois cenários independentes verificam bloqueio COPSOQ pendente e aprovação sem duplicidade.
+
+O Playwright usa o Chrome instalado no caminho padrão do Windows quando
+disponível; nos demais ambientes, usa o Chromium instalado pelo próprio
+Playwright. Artefatos de falha ficam em `test-results/` e
+`playwright-report/`, ambos ignorados pelo Git.
+
 ## O que funciona
 
 - Edição da empresa e setores; campanhas com criação, edição de rascunhos, abertura, encerramento, análise e finalização.

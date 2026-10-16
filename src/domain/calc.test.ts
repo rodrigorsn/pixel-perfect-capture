@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateScope, scoreItem } from './calc';
+import { calculateScope, scoreItem, validateResponse } from './calc';
 import { DEMO_INSTRUMENT, DEFAULT_INSTRUMENTS } from './instruments';
 import { applyComplementarySuppression } from './privacy';
 import { createDemoDatabase } from './demo-data';
@@ -14,3 +14,7 @@ describe('motor demonstrativo',()=>{
  it('suprime grupos pequenos e grupo complementar',()=>{expect(calc([base('1',{q1:4})],5).dimensions[0]?.score).toBeNull();const marked=applyComplementarySuppression([{count:2},{count:7},{count:12}],5);expect(marked.map(g=>g.suppressed)).toEqual([true,true,false])});
  it('mantém COPSOQ pendente bloqueado e campanha com cópia congelada',()=>{expect(DEFAULT_INSTRUMENTS.filter(i=>i.family==='COPSOQ').every(i=>!i.publishable&&i.questions.length===0)).toBe(true);const db=createDemoDatabase();expect(db.campaigns[0]?.instrumentSnapshot?.rulesVersion).toBe('demo-regras-1.0.0');expect(db.campaigns[0]?.frozenAt).toBeTruthy()});
 });
+ it('não divulga dimensão com menos participantes válidos que o limite de privacidade',()=>{const responses=Array.from({length:10},(_,i)=>base(String(i),{q1:i<3?4:null,q2:i<3?4:null}));const result=calc(responses,5);expect(result.dimensions[0]?.validRespondents).toBe(3);expect(result.dimensions[0]?.status).toBe('suprimido_privacidade');expect(result.dimensions[0]?.score).toBeNull()});
+ it('aceita exatamente o limite de participantes válidos quando não há supressão complementar',()=>{const responses=Array.from({length:5},(_,i)=>base(String(i),{q1:4,q2:4}));const result=calc(responses,5);expect(result.dimensions[0]?.validRespondents).toBe(5);expect(result.dimensions[0]?.score).toBe(100)});
+ it.each([['NaN',Number.NaN],['Infinity',Number.POSITIVE_INFINITY],['string','4' as unknown as number],['fração',1.5],['fora',999]])('rejeita valor inválido %s',(_,value)=>{const response=base('invalid',{q1:value,q2:4});expect(validateResponse(response,DEMO_INSTRUMENT)).toEqual(expect.objectContaining({valid:false}));const result=calc([response]);expect(result.dimensions[0]?.validRespondents).toBe(0);expect(result.dimensions[0]?.score).toBeNull()});
+ it('diferencia ausência voluntária de resposta incompatível',()=>{const absent=base('absent',{q1:null,q2:4});expect(validateResponse(absent,DEMO_INSTRUMENT).valid).toBe(true);const incompatible={...base('wrong',{q1:4,q2:4}),instrumentId:'other'};expect(validateResponse(incompatible,DEMO_INSTRUMENT).valid).toBe(false)});

@@ -1,38 +1,86 @@
 # Handoff — PsicoGestão NR-1
 
-## Estado da entrega
+## 1. Estado da Entrega e Visão Geral
 
-Protótipo demonstrativo com persistência local, uma empresa fictícia, quatro setores, uma campanha em análise com respostas fictícias, uma campanha em rascunho, três riscos e duas ações. A campanha principal pode ser usada para explorar resultados, riscos, ações e relatório; abra a campanha em rascunho para exercitar a coleta. Não foi criado backend, serviço pago ou coleta real.
+Protótipo demonstrativo com arquitetura desacoplada, persistência local em `localStorage`, empresa fictícia, quatro setores configurados, campanha principal em análise com respostas fictícias, campanha em rascunho para simulação de coleta, matriz de riscos ocupacionais, sugestões estruturadas e plano de ação.
 
-## Arquitetura
+- **Stack Técnica**: TanStack Start (React 19, TypeScript), Vite 8, Tailwind CSS v4, Lucide Icons, Recharts, Radix UI.
+- **Armazenamento**: Local via camada de abstração `src/data/repository.ts` (`DatabaseRepository`), isolada dos componentes React.
+- **Validação de Qualidade**: 29 testes unitários/integração (Vitest) e 3 cenários E2E (Playwright).
 
-- `src/routes/`: páginas TanStack Start; `responder.$campaignId.tsx` é a rota de resposta separada da navegação administrativa.
-- `src/features/`: interface (`layout`, `dashboard`, `pages`, `respond`) e adaptação dos resultados agregados (`shared`).
-- `src/domain/types.ts`: entidades e estados de domínio; `instruments.ts`: catálogo e fontes; `demo-data.ts`: dados fictícios reproduzíveis; `calc.ts`: cálculo puro; `privacy.ts`: agregação e supressão; `suggestions.ts`: contrato do provedor e implementação simulada.
-- `src/data/repository.ts`: fronteira de persistência substituível. `src/state/store.tsx`: estado React e sincronização local.
-- `src/styles.css`: sistema de cores, tipografia e estilos, incluindo impressão A4.
+---
 
-Entidades: `Company`, `Department`, `Campaign`, `InstrumentVersion`, `DimensionDefinition`, `QuestionDefinition`, `AnonymousResponse`, `CalculationResult`, `RiskAssessment`, `ActionSuggestion`, `ActionPlanItem`, `ReportSnapshot`, `MethodologySource`.
+## 2. Arquitetura e Estrutura de Código
 
-## Regras e limites técnicos
+- `src/domain/`: Regras de negócio puras, determinísticas e sem dependência de UI ou framework:
+  - `types.ts`: Tipagem completa do sistema (`Company`, `Department`, `Campaign`, `InstrumentVersion`, `AnonymousResponse`, `CalculationResult`, `RiskAssessment`, `ActionSuggestion`, `ActionPlanItem`, `ReportSnapshot`).
+  - `calc.ts`: Cálculo de médias, normalização (0–100), tratamento de itens invertidos e pontuação por dimensão exigindo participantes válidos (mínimo de respostas válidas por participante e mínimo de participantes por dimensão).
+  - `privacy.ts`: Regras de k-anonimato com supressão de grupos abaixo do limiar (default: 5) e supressão complementar para evitar deduções em comparações de setores.
+  - `instruments.ts`: Catálogo de versões do instrumento (versão demonstrativa liberada; versões COPSOQ curta/média/longa mantidas com status `pendente_validacao_documental`).
+  - `actions.ts`: Validação de planos de ação (5W2H simplificado) e aprovação idempotente de sugestões com preservação da proposta original.
+  - `suggestions.ts`: Contrato de provedor (`SuggestionProvider`) e provedor simulado local (`demoSuggestionProvider`) sem vazamento de dados individuais.
+  - `demo-data.ts`: Gerador de sementes e dados fictícios reproduzíveis.
+- `src/data/`:
+  - `repository.ts`: Interface e implementação do repositório (`DatabaseRepository`) com isolamento de `localStorage`, tratamento de dados corrompidos e reset para base demonstrativa.
+- `src/features/`: Componentes visuais organizados por módulos (`dashboard`, `pages`, `respond`, `shared`, `layout`).
+  - `pages.tsx`: Visões de Campanhas, Resultados, Riscos, Ações, Relatórios e Metodologia/Configurações.
+  - `respond.tsx`: Interface focada no participante para resposta anônima do questionário.
+  - `shared.ts`: Agregação e cálculo de resultados por escopo com proteção de privacidade.
+- `src/routes/`: Rotas TanStack Start baseadas em arquivo.
+  - `responder.$campaignId.tsx`: Rota isolada para resposta pública/anônima do colaborador.
+- `src/state/`:
+  - `store.tsx`: Contexto e provedor React para distribuição de estado e sincronização com o repositório.
+- `tests/`:
+  - `tests/e2e/critical-flow.spec.ts`: Fluxo crítico completo dos sete passos (campanha, coleta, cálculo, risco, sugestão, ação e relatório).
+  - `tests/e2e/invariants.spec.ts`: Invariantes de bloqueio de versões pendentes e aprovação idempotente sem duplicidade.
 
-- Instrumento demonstrativo v1: 15 perguntas fictícias em cinco dimensões, alternativas 0–4, normalização 0–100. Itens invertidos espelham a pontuação. A média da dimensão calcula-se por participante válido e depois entre participantes válidos. O mínimo de itens válidos por participante é 2 dos 3, e a dimensão exige ao menos 3 participantes válidos. Ausência nunca vira zero.
-- Versões curta, média e longa do COPSOQ são independentes e **pendentes de validação documental**. Nenhum item oficial foi copiado e não se assumiu edição, adaptação ou quantidade de perguntas.
-- Resultados sem referência interpretativa são descritivos. Não há cortes, score global ou conversão de pontuação em probabilidade/severidade. Riscos requerem julgamento e justificativa humana.
-- Privacidade: mínimo configurável, inicialmente 5, com supressão de grupos abaixo do mínimo e de mais um grupo quando só um foi suprimido. Gráficos, tabela, relatório e contexto do provedor recebem apenas resultados liberados. Respostas individuais permanecem no armazenamento local para o cálculo, mas não têm tela administrativa. **Revisar novamente contra ataques de diferenciação quando novos filtros ou exportações forem criados.**
-- Campanhas abertas guardam `instrumentSnapshot` e `frozenAt`. Alterações futuras no catálogo não recalculam versões antigas.
-- Sugestões são propostas; nunca aprovadas automaticamente. Riscos não avaliados recebem propostas exploratórias sem botão de aprovação habilitado. Aprovação exige responsável, prazo estimado e indicador de execução; ação guarda proposta original e versão aprovada. Implementação e verificação de eficácia têm estados e datas separados.
-- Relatórios geram um retrato imutável dos dados selecionados naquele momento dentro do armazenamento local; a impressão do retrato não altera registros posteriores.
+---
 
-## Fontes e verificação
+## 3. Regras de Negócio e Limites Técnicos
 
-Links iniciais cadastrados: [NR-1 / MTE](https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-1), [COPSOQ International Network](https://www.copsoq-network.org/), [licença e questionário](https://www.copsoq-network.org/licence-guidelines-and-questionnaire), [estudos de validação](https://www.copsoq-network.org/validation-studies). **Nenhum documento foi verificado nesta etapa.** Nenhuma seção, ponto de corte, validade científica ou obrigação normativa foi inventada.
+1. **Instrumento Demonstrativo v1**:
+   - 15 perguntas distribuídas em 5 dimensões (Exigências Quantitativas, Ritmo de Trabalho, Apoio Social, Clareza de Papel, Reconhecimento).
+   - Alternativas de 0 a 4 normalizadas em escala 0–100. Itens invertidos têm pontuação espelhada.
+   - Cada participante precisa de ao menos 2 itens válidos em 3 da dimensão para ser considerado válido nela. Uma dimensão exige ao menos 3 participantes válidos.
+2. **COPSOQ e Instrumentos Oficiais**:
+   - As versões COPSOQ no catálogo estão bloqueadas para publicação e abertura (`pendente_validacao_documental`). Nenhum item oficial com direitos autorais foi copiado.
+3. **Privacidade e Supressão**:
+   - Limiar configurável (padrão de 5 respostas). Grupos com menos de 5 respostas são suprimidos.
+   - Aplica-se supressão complementar se apenas um setor for suprimido (evita descoberta por subtração do total da empresa).
+   - Nenhum dado individual de resposta é exibido em telas administrativas ou enviado a provedores externos.
+4. **Avaliação de Riscos e Sugestões**:
+   - A pontuação psicossocial não se converte automaticamente em nível de risco. A classificação do risco (baixo, moderado, alto, muito alto) requer julgamento humano fundamentado.
+   - Sugestões geradas pela IA simulada permanecem em status `pendente` e exigem aprovação explícita.
+   - Aprovação de sugestão requer definição de responsável, prazo válido, indicador de execução, indicador de eficácia e método de verificação. A versão original é preservada em `originalProposal`.
+5. **Relatório**:
+   - Ao salvar um relatório, é gerado um `ReportSnapshot` imutável no banco local, garantindo integridade documental para impressão/PDF.
 
-## Próximas etapas para Antigravity/Codex
+---
 
-1. Obter instrumento e manuais/licenças oficiais, verificar edição/adaptação brasileira, regras, referências e condições de uso com especialista; versionar cada adaptação separadamente.
-2. Projetar servidor e banco com controles de acesso, logs adequados, convites sem identificação e política de retenção antes de coletar dados reais. Redesenhar prevenção de duplicidade sem rastreamento pessoal; revisar modelo de ameaça para anonimato, grupos, exportações e consultas cruzadas.
-3. Substituir `DatabaseRepository` por API com controle de concorrência, histórico/auditoria e autorização. Não migrar respostas locais fictícias como se fossem reais.
-4. Implementar provedor real de IA somente em serviço seguro; não enviar dados individuais, validar saída e exigir aprovação humana.
-5. Formalizar critérios de avaliação ocupacional com profissionais responsáveis, critérios de classificação e fluxo de aprovação; validar relatório e documentos normativos.
-6. Ampliar testes automatizados de domínio e fluxos ponta a ponta; testar acessibilidade e impressão em diferentes navegadores.
+## 4. Próximos Passos para Continuidade (Handoff)
+
+1. **Validação Jurídico-Científica dos Instrumentos**:
+   - Obter licenças e manuais oficiais dos instrumentos psicossociais validados para o Brasil (ex: COPSOQ III / adaptações validadas).
+   - Parametrizar pontos de corte e referências científicas validadas antes de liberar novas versões.
+2. **Backend e Segurança**:
+   - Substituir `DatabaseRepository` por API REST/GraphQL conectada a banco relacional (ex: PostgreSQL/Prisma).
+   - Implementar autenticação corporativa (SSO/JWT), controle de acesso baseado em papéis (RBAC) e logs de auditoria.
+   - Implementar tokens de resposta efêmeros ou links públicos para garantir unicidade sem identificação nominal do trabalhador.
+3. **Provedor Real de IA (LLMs)**:
+   - Implementar o contrato `SuggestionProvider` em serviço backend seguro.
+   - Enviar apenas metadados agregados e descrições de riscos avaliados (nunca dados brutos de respostas).
+4. **Relatórios e Acessibilidade**:
+   - Suporte a download direto em PDF gerado no servidor.
+   - Auditoria de acessibilidade WCAG 2.1 AA em todo o fluxo de resposta e painel administrativo.
+
+---
+
+## 5. Comandos de Verificação e Execução
+
+- `bun install`: Instalação de dependências.
+- `bun run dev`: Inicia o servidor Vite na porta configurada (default: 8080).
+- `bun run test:unit`: Executa suite de testes unitários e de integração com Vitest.
+- `bun run test:e2e`: Executa testes de ponta a ponta com Playwright.
+- `bun run typecheck`: Checagem estática de tipos TypeScript (`tsc --noEmit`).
+- `bun run lint`: Análise de código com ESLint.
+- `bun run build`: Compilação de produção.
