@@ -8,7 +8,7 @@ import type { Database } from "@/domain/types";
  */
 export interface DatabaseRepository {
   load(): Database;
-  save(db: Database): void;
+  save(db: Database): boolean;
   reset(): Database;
 }
 
@@ -28,15 +28,16 @@ export const localRepository: DatabaseRepository = {
       if (!parsed || parsed.version !== 1) return this.reset();
       return parsed;
     } catch {
-      return createDemoDatabase();
+      return this.reset();
     }
   },
   save(db) {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return false;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      return true;
     } catch {
-      /* armazenamento indisponível: a sessão continua apenas em memória */
+      return false;
     }
   },
   reset() {
