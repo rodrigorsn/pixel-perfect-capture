@@ -6,4 +6,4 @@
 - [x] Campanhas, questionário separado e cálculo agregado
 - [x] Avaliação de riscos, sugestões simuladas e aprovação humana
 - [x] Relatório imprimível, fontes e documentação de continuidade
-- [ ] Verificações automatizadas e fluxo de ponta a ponta
+- [x] Verificações automatizadas e fluxo de ponta a ponta

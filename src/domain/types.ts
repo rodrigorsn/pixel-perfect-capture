@@ -53,10 +53,7 @@ export interface ResponseOption {
   value: number;
 }
 
-export type InstrumentStatus =
-  | "pendente_validacao_documental"
-  | "demonstrativo"
-  | "validado";
+export type InstrumentStatus = "pendente_validacao_documental" | "demonstrativo" | "validado";
 
 export interface InstrumentVersion {
   id: ID;
@@ -82,12 +79,7 @@ export interface InstrumentVersion {
   disclaimer: string;
 }
 
-export type CampaignStatus =
-  | "rascunho"
-  | "aberta"
-  | "encerrada"
-  | "em_analise"
-  | "finalizada";
+export type CampaignStatus = "rascunho" | "aberta" | "encerrada" | "em_analise" | "finalizada";
 
 export interface Campaign {
   id: ID;
@@ -155,11 +147,7 @@ export interface CalculationResult {
 
 export type RiskStage = "em_analise" | "aguardando_informacoes" | "avaliado";
 export type RiskClassification =
-  | "avaliacao_pendente"
-  | "baixo"
-  | "moderado"
-  | "alto"
-  | "muito_alto";
+  "avaliacao_pendente" | "baixo" | "moderado" | "alto" | "muito_alto";
 
 export interface RiskAssessment {
   id: ID;
@@ -193,6 +181,8 @@ export type SuggestionStatus = "pendente" | "aprovada" | "rejeitada";
 export interface ActionSuggestion {
   id: ID;
   riskIds: ID[];
+  campaignId: ID;
+  departmentId: ID | null;
   title: string;
   measure: string;
   rationale: string;
@@ -210,6 +200,8 @@ export interface ActionSuggestion {
   rejectionReason: string | null;
   generatedAt: ISODate;
   provider: string;
+  /** Primeira versão gerada, preservada quando houver revisão humana. */
+  generatedProposal?: Partial<ActionSuggestion> | null;
 }
 
 export type ActionStatus =
@@ -236,6 +228,7 @@ export interface ActionPlanItem {
   verificationMethod: string;
   origin: ActionOrigin;
   originalProposal: Partial<ActionSuggestion> | null;
+  sourceSuggestionId?: ID | null;
   status: ActionStatus;
   implementedAt: ISODate | null;
   effectivenessCheckedAt: ISODate | null;
