@@ -27,7 +27,7 @@ A E1 estava prevista para começar hoje (19–23/out), mas não começa sem a E0
 
 | PR | Branch | Conteúdo | Observação |
 |---|---|---|---|
-| #4 | `etapa/E0-T07-desvincular-lovable` | E0-T07 (+ E0-T01) | **A base ainda é `etapa/E0-T03-baseline-local`**; precisa ser trocada para `main` antes do merge. A branch já contém a `main` atual. Sem parecer publicado. |
+| #4 | `etapa/E0-T07-desvincular-lovable` | E0-T07 (+ E0-T01) | Base trocada de `etapa/E0-T03-baseline-local` para `main` (19/10); diff só com os 8 arquivos da E0-T07. Sem parecer publicado. |
 | #7 | `etapa/P-T02-referencias` | P-T02: referências documentais e LACUNAS | Só docs. P-T02 não está no CRONOGRAMA; registrar na trilha P. |
 | #8 | `maestri/licao-diff-normalizado` | Lições do PR #3; E1-T00a–d | Só docs. |
 | #9 | `maestri/validacao-permissoes` | Teste de permissões dos agentes | Só docs. Rodrigo aprovou em 16/10 por mensagem. |
@@ -35,7 +35,7 @@ A E1 estava prevista para começar hoje (19–23/out), mas não começa sem a E0
 
 ## Próximas tarefas, nesta ordem
 
-1. Rodrigo: trocar a base do #4 para `main` e decidir o merge de #4, #7, #8 e #9.
+1. #4: pareceres do Revisor, da Segunda opinião e do QA publicados no PR; depois, Rodrigo decide o merge de #4, #7, #8, #9 e #10.
 2. E0-T04: CI no GitHub Actions (test:unit + typecheck + build), depois do #4 para o CI já rodar sem o registro do Lovable.
 3. E0-T05: teste de modelos na mesma tarefa; Revisor compara e o vencedor vai para o VALIDACOES.
 4. E0-T00: painel `bun run task` / `bun run status` (deixa este arquivo gerado).
