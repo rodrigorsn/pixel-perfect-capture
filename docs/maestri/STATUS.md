@@ -1,34 +1,66 @@
-# STATUS (manual — vira gerado na FASE B)
+# STATUS (manual — vira gerado quando a E0-T00 entrar)
 
-Atualizado: 15/10/2026 · Branch: `maestri/estrutura` · Etapa: FASE A (estrutura)
+Atualizado: 19/10/2026 · Branch: `maestri/status-e1` · Etapa: **E0 — Fundação (em fechamento)**
 
-## Diagnóstico inicial
+A E1 estava prevista para começar hoje (19–23/out), mas não começa sem a E0 aprovada (PAPEIS). O log ao vivo `.maestri/eventos.jsonl` da sessão anterior do Maestro se perdeu; este STATUS foi reconstruído a partir do GitHub.
 
-Executado em duas árvores: `origin/main` (clone limpo) e a pasta de trabalho local.
+## Estado da `main`
 
-| Check | `origin/main` (clone limpo) | Pasta local (com alterações não commitadas) |
+`d480de2`. Entraram os PRs #1 (estrutura), #2 (ajustes da especificação), #5 (worktrees por papel), #6 (OpenCode Go e leitura do git) e #3 (E0-T03 baseline). A `main` tem `test:unit`, `typecheck`, `lint`, `test:e2e` e `build`; ainda não tem CI (`.github/`), nem os scripts `task` e `status`.
+
+## E0 — tarefas
+
+| Tarefa | Estado | Onde |
 |---|---|---|
-| `bun install --frozen-lockfile` | ✅ 427 pacotes em 39 s, sem 403 nesta máquina | ✅ |
-| `bun run test:unit` | ❌ script **não existe** na main | ✅ 7 arquivos / 29 testes |
-| `bun run typecheck` | ❌ script **não existe** na main | ✅ limpo |
-| `bun run build` | ✅ | ✅ |
-| e2e (Playwright) | ❌ sem script nem config na main | não executado |
+| E0-T00 painel `bun run task` / `bun run painel` | a fazer | — |
+| E0-T01 instalação reproduzível fora do Lovable | em revisão (junto com a E0-T07) | PR #4 |
+| E0-T02 typecheck limpo | concluída; confirmar no CI | `main` (#3) |
+| E0-T03 scripts `test` e `typecheck` na `main` | **concluída** | PR #3 |
+| E0-T04 CI GitHub Actions: test + typecheck + build | a fazer | — |
+| E0-T05 teste Kimi K2.7 Code × DeepSeek V4.1 Flash | a fazer; Dev provisório: Kimi | — |
+| E0-T06 destino do trabalho local não commitado | **concluída** (preservado e mergeado como E0-T03) | PR #3 |
+| E0-T07 desvincular do Lovable | em revisão, aguardando merge | PR #4 |
 
-## Achados que mudam o plano
+**Pronto da E0 (CRONOGRAMA):** CI verde na `main` e o vencedor da E0-T05 registrado em VALIDACOES. Faltam E0-T04 e E0-T05; depois, o PR "E0 — fechamento".
 
-1. **Trabalho local não commitado.** A pasta tem 22 arquivos modificados e 10 novos (`+2389/−328`): testes (`actions`, `privacy`, `suggestions`, `instruments`, `repository`, `shared`), `actions.ts`, `playwright.config.ts`, `vitest.config.ts`, `tests/e2e`, scripts `test:unit`/`typecheck`/`test:e2e` no `package.json`. A `main` está no commit `a3465e8` e **não contém nada disso**. Nada foi commitado nesta branch. Decisão do Rodrigo: commitar como E0-T03, descartar ou revisar antes.
-2. **Premissa do briefing difere da realidade:** a main tem só `calc.test.ts`; o build passa na main e o typecheck não pode ser rodado (script ausente).
-3. **403 no registro privado não reproduzido aqui.** O `bun.lock` aponta 19 URLs para `europe-west1-npm.pkg.dev` (registro do Lovable) e a instalação funcionou nesta máquina. Pode falhar em CI ou outra máquina; E0-T01 precisa testar isso (ex.: runner do GitHub Actions).
-4. **IDs de modelo:** todos confirmados em `opencode models`, exceto "Jev 1.13 Free" (não existe na lista). `opencode.json` tem `PENDENTE-jev-1.13-free` nesse agente.
+## PRs abertos
 
-## Decisões (15/10/2026)
+| PR | Branch | Conteúdo | Observação |
+|---|---|---|---|
+| #4 | `etapa/E0-T07-desvincular-lovable` | E0-T07 (+ E0-T01) | **A base ainda é `etapa/E0-T03-baseline-local`**; precisa ser trocada para `main` antes do merge. A branch já contém a `main` atual. Sem parecer publicado. |
+| #7 | `etapa/P-T02-referencias` | P-T02: referências documentais e LACUNAS | Só docs. P-T02 não está no CRONOGRAMA; registrar na trilha P. |
+| #8 | `maestri/licao-diff-normalizado` | Lições do PR #3; E1-T00a–d | Só docs. |
+| #9 | `maestri/validacao-permissoes` | Teste de permissões dos agentes | Só docs. Rodrigo aprovou em 16/10 por mensagem. |
+| este | `maestri/status-e1` | STATUS e prompt de abertura do Maestro | Só docs. |
 
-- (a) E3: **Next.js + Prisma** — ver [ADR-0001](ADR-0001-next-prisma.md).
-- (b) Datas mantidas; trabalho local mantido (interpretação do Maestro; Rodrigo confirma).
-- (c) Trabalho local preservado na branch `etapa/E0-T03-baseline-local` e submetido a Revisor + QA antes de entrar na main.
-- (d) Modelos (16/10): provedor `opencode-go` para todos (Dev kimi-k2.7-code, Revisor deepseek-v4-pro, Segunda opinião glm-5.2, QA deepseek-v4.1-flash). Ver PAPEIS.md.
+## Próximas tarefas, nesta ordem
 
-## Pendências
+1. Rodrigo: trocar a base do #4 para `main` e decidir o merge de #4, #7, #8 e #9.
+2. E0-T04: CI no GitHub Actions (test:unit + typecheck + build), depois do #4 para o CI já rodar sem o registro do Lovable.
+3. E0-T05: teste de modelos na mesma tarefa; Revisor compara e o vencedor vai para o VALIDACOES.
+4. E0-T00: painel `bun run task` / `bun run status` (deixa este arquivo gerado).
+5. PR "E0 — fechamento" e tag `etapa-E0`.
+6. E1, começando por E1-T00a–d (#8) e depois E1-T01 a E1-T05.
 
-- `gh` CLI não está instalado: PRs são abertos pelo link do GitHub.
-- E0-T07 (desvincular do Lovable) feita em `etapa/E0-T07-desvincular-lovable`, empilhada sobre `etapa/E0-T03-baseline-local`: merge nessa ordem. Falta Rodrigo desconectar o projeto no painel do Lovable e revogar o GitHub App.
+## Trilha paralela
+
+- P-T01 instrumento validado (COPSOQ): **bloqueada**, aguardando licença e manual.
+- P-T02 referências documentais: em revisão (#7).
+
+## Ambiente
+
+- Worktrees: `-dev` na branch `etapa/E0-T03-baseline-local` (já mergeada; reposicionar na próxima tarefa). `-revisor`, `-segunda` e `-qa` em HEAD destacado em `ae88ff8` (ponta da E0-T07). Todos limpos.
+- Worktrees extras, limpos e não previstos no PAPEIS: `.kilo/worktrees/pushy-radar` (`a3465e8`) e dois na pasta temporária da sessão anterior do Maestro (`wt-docs`, `wt-e0`). Remover só com ok do Rodrigo.
+- `gh` instalado e autenticado (19/10): o Maestro publica pareceres com `gh pr comment`.
+
+## Decisões registradas
+
+- (15/10) E3: **Next.js + Prisma** — ver [ADR-0001](ADR-0001-next-prisma.md).
+- (15/10) Datas mantidas; trabalho local preservado em `etapa/E0-T03-baseline-local`, revisado e mergeado (#3).
+- (16/10) Provedor `opencode-go` para todos os agentes (Dev kimi-k2.7-code, Revisor deepseek-v4-pro, Segunda opinião glm-5.2, QA deepseek-v4.1-flash). Ver PAPEIS.md.
+- (16/10) Teste de permissões aprovado (#9).
+
+## Pendências do Rodrigo
+
+- Desconectar o projeto no painel do Lovable e revogar o GitHub App (fecha a E0-T07).
+- Licença e manual COPSOQ (P-T01).
