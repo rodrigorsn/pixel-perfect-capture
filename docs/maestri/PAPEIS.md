@@ -1,6 +1,6 @@
 # Papéis, modelos e regras de orquestração
 
-Fluxo de cada tarefa: **Maestro → Dev → Revisor → QA → Maestro → Rodrigo**.
+Fluxo de cada tarefa: **Maestro → Dev → Revisor → Segunda opinião (só E0–E2) → QA → Maestro → Rodrigo**.
 
 ## Regras do repositório (invioláveis)
 
@@ -83,7 +83,7 @@ cd C:\projetos\pixel-perfect-capture-qa       && opencode --agent qa            
 - **Entrada:** branch + diff. **Saída:** parecer com achados por severidade; checklist de anonimato.
 
 ### QA
-- **Pode:** rodar `bun *`, trocar de branch, navegar o fluxo; registrar `check`.
+- **Pode:** rodar `bun *`, navegar o fluxo; registrar `check`. Não troca de branch: o Maestro posiciona o worktree (ver "Como abrir cada agente").
 - **Não pode:** editar código, commitar, dar push; colar logs inteiros.
 - **Entrada:** branch aprovada pelo Revisor. **Saída:** resumo com comandos, resultado, evidências.
 
