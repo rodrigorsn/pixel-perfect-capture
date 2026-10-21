@@ -2,6 +2,11 @@
 
 Fluxo de cada tarefa: **Maestro → Dev → Revisor → Segunda opinião (só E0–E2) → QA → Maestro → Rodrigo**.
 
+- **O fluxo completo vale só para código de produto** (`src/`, `tests/`, dependências e scripts do `package.json`).
+- **Trilha leve para docs, config e CI** (`docs/`, `opencode.json`, `.claude/`, `.github/`, `.gitattributes`, `.gitignore`): **Maestro → Revisor → Rodrigo**. Quem escreve é o Maestro, ou o Dev quando a mudança é de CI; sem Segunda opinião e sem QA. O CI verde no GitHub substitui o QA.
+- **Mudanças em `docs/maestri/` acumulam num PR por etapa** (ex.: "E0 — docs do Maestro"), atualizado ao longo da etapa, não um PR por ajuste. Esse PR fecha junto com o PR "<ETAPA> — fechamento".
+- **Comandos fora da lista são negados, não perguntados:** no `opencode.json`, o bash de todos os agentes tem `"*": "deny"`. O agente que precisar de algo fora da lista para e reporta ao Maestro (o que precisa e por quê); o Maestro leva ao Rodrigo, e uma liberação nova entra no `opencode.json` por PR.
+
 ## Regras do repositório (invioláveis)
 
 - Sem vínculo com o Lovable (E0-T07). Mesmo assim: nunca force push, rebase, amend ou squash de commits já publicados. A `main` sempre funcionando.
