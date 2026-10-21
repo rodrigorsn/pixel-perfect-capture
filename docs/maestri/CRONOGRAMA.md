@@ -31,6 +31,11 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E1-T03 privacy: mínimo do grupo + supressão complementar (D)
   - E1-T04 suggestions: nunca aprova sozinho, nunca recebe dado individual (D)
   - E1-T05 congelamento do instrumento na abertura da campanha (D)
+  - **Achados do teste manual do Rodrigo em Empresa e setores (20/10):**
+    - E1-T00e (prioridade: logo depois da E1-T00a) remover setor referenciado por campanhas, respostas ou riscos: bloquear ou exigir arquivamento, sem deixar dados órfãos; unificar como Campanhas (`pages.tsx` ~524), Resultados (`scopeLabel`, ~637/~698), Riscos (~1119, "Não definido") e o cálculo (`shared.ts` ~11/~26, que cai para o id) resolvem o nome do setor; teste de domínio e e2e (D)
+    - E1-T08 Empresa e setores: aviso ao sair com alterações não salvas e confirmação ao remover setor (D)
+    - E1-T09 Empresa e setores: validar nome da empresa e do setor obrigatórios, alertar quando a soma dos setores passa do total da empresa e não mostrar "Salvo" com dado inválido; campo numérico aceita vazio sem forçar 0 nem gerar zero à esquerda (`Number(value)`, `pages.tsx` ~71, ~122) (D)
+    - Editar antes de o app carregar (não reproduzido no teste manual) fica coberto pela E1-T00d.
 - **Pronto:** casos de borda cobertos; Revisor aprova invariantes.
 - **Roteiro:** `bun run test` → ver os arquivos calc/privacy/suggestions/instruments verdes; quebrar um limiar de propósito e ver o teste falhar.
 
