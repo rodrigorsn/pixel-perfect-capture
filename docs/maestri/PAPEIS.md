@@ -39,6 +39,23 @@ Regras de modelos: todos os agentes usam o provedor `opencode-go` (assinatura Op
 4. **Main mudou** (ex.: edição no Lovable): os agentes atualizam a própria branch com `git merge main`, **nunca com rebase**.
 5. **Worktrees dos agentes** ficam fora do repositório: `../pixel-perfect-capture-<papel>`.
 
+## Lição: revisar arquivos reformatados
+
+Para revisar um arquivo que foi reformatado, **compare as versões normalizadas pelo formatador do projeto; não use `git diff -w`**. O `-w` ignora só espaços e não detecta linhas quebradas ou reagrupadas: no PR #3, `src/features/pages.tsx` mostrava +2095/−58 (e +2093/−56 com `-w`), mas a mudança real era de +120/−85.
+
+```bash
+git show main:<arquivo> > tmp/main.tsx
+git show <branch>:<arquivo> > tmp/branch.tsx
+bunx prettier --write tmp/main.tsx tmp/branch.tsx
+git diff --no-index tmp/main.tsx tmp/branch.tsx > tmp/<arquivo>-normalizado.diff
+```
+
+O Maestro gera o diff na pasta principal (`tmp/` está no `.gitignore`) e o copia para o `tmp/` do worktree do Revisor e da Segunda opinião, que o leem junto com o diff normal dos demais arquivos.
+
+## Lição: o QA roda um comando por vez
+
+O QA (modelo flash) tende a encadear comandos (`;`, `&&`, pipes) e a usar comandos de shell fora da lista liberada (`Test-Path`, `ls -la` no PowerShell). Esses comandos não casam com as regras de permissão e geram pedido de aprovação. Antes de rejeitar, o Maestro **lembra o QA**: um comando por vez, só `bun *`, git de leitura, `ls` e `git push` nunca. Se ele insistir, rejeitar e repetir a instrução. O mesmo vale para o Dev e os demais agentes.
+
 ## Notas sobre as permissões (divergências da sintaxe documentada)
 
 Conferido contra opencode.ai/docs/permissions e /agents:

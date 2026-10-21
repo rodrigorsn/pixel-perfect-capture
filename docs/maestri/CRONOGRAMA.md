@@ -21,6 +21,11 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
 - **Objetivo:** travar o comportamento do domínio com testes de borda.
 - **Entregável:** suíte verde.
 - **Tarefas:**
+  - **Primeiras tarefas da E1, nesta ordem (pendências da revisão do PR #3):**
+    - E1-T00a `repository.load` reaplica o piso de 5 do tamanho mínimo de grupo a valores antigos do `localStorage` (`repository.ts` ~27); privacidade, com teste (D)
+    - E1-T00b store: `useRef` com o estado mais recente; `update()` com retorno verificado na aprovação, no envio de resposta e no "Salvo" (`store.tsx` ~33, `pages.tsx` ~64, ~1205) (D)
+    - E1-T00c testes sintéticos da supressão complementar: ≥3 escopos com contagens controladas, direto em `campaignResults` (D)
+    - E1-T00d gate `hydrated` em todas as páginas que gravam, incluindo `ReportsPage` (~1855), e aviso no cadastro de risco sem campanha de origem (~827, ~1191) (D)
   - E1-T01 calc: normalização e itens invertidos (D)
   - E1-T02 calc: mínimo 2 de 3 itens, mínimo 3 participantes, ausência ≠ zero (D)
   - E1-T03 privacy: mínimo do grupo + supressão complementar (D)

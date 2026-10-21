@@ -36,5 +36,8 @@ test-results/
 # Maestri: log ao vivo (fora do git)
 .maestri/
 
+# Maestri: diffs normalizados de revisao
+tmp/
+
 # Referências de terceiros (não versionar)
 docs/referencias/privadas/
