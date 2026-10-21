@@ -14,6 +14,7 @@ Dev solo, cerca de 1 etapa por semana. Datas de 2026. Papéis: **D** Dev, **R** 
   - E0-T05 teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash na mesma tarefa; Revisor compara; vencedor vira Dev até a E2 (D, R, M)
   - E0-T06 decidir destino do trabalho local não commitado: preservado em `etapa/E0-T03-baseline-local` (P, M)
   - E0-T07 desvincular do Lovable: vite.config próprio, sem telemetria, lock no npm público (D) — branch `etapa/E0-T07-desvincular-lovable`, empilhada sobre a E0-T03
+  - E0-T08 padronizar fins de linha: versionar `.gitattributes` com `* text=auto eol=lf` e renormalizar o repositório (`git add --renormalize .`) num commit só disso; o build no Windows deixa de marcar `src/routeTree.gen.ts` como alterado e o `core.autocrlf` local deixa de importar (D)
 - **Pronto:** CI verde na `main`; VALIDACOES registra o vencedor do teste.
 - **Roteiro (5 min):** `git clone` → `bun install` → `bun run test && bun run typecheck && bun run build`; abrir a aba Actions e ver o run verde.
 

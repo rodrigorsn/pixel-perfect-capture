@@ -16,7 +16,7 @@
       "git push * main": "deny", "git push * main *": "deny", "git push * HEAD:main*": "deny",
       "git push *--force*": "deny", "git push -f *": "deny", "git push * -f": "deny", "git push * -f *": "deny",
       "git reset --hard*": "deny", "git rebase*": "deny", "git commit --amend*": "deny",
-      "rm -rf*": "deny"
+      "rm -rf*": "deny", "git config*": "deny"
     }
   },
   "agent": {
@@ -36,7 +36,8 @@
           "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
           "git fetch*": "allow", "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
           "bun run test*": "allow", "bun run typecheck*": "allow",
-          "bunx vitest*": "allow", "bun run task*": "allow"
+          "bunx vitest*": "allow", "bun run task*": "allow",
+          "git config*": "deny"
         }
       }
     },
@@ -52,7 +53,7 @@
           "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
           "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
           "git fetch*": "allow",
-          "git push*": "deny", "git commit*": "deny", "rm -rf*": "deny"
+          "git push*": "deny", "git commit*": "deny", "rm -rf*": "deny", "git config*": "deny"
         }
       }
     },
@@ -64,7 +65,8 @@
         "edit": "deny",
         "bash": {
           "*": "deny", "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
-          "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow"
+          "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
+          "git config*": "deny"
         }
       }
     }
