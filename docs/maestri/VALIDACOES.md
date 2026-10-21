@@ -20,10 +20,35 @@ Agentes reiniciados com `opencode-go` (OpenCode 1.19.3), worktrees em HEAD desta
 
 Worktrees do Revisor e do QA seguiram limpos (0 alterações) após os testes. Observações: o teste do Revisor foi pedido por prompt, não por ação espontânea; o "dry-run" foi usado no push para não haver efeito caso a regra falhasse. A Segunda opinião e o Dev não foram testados (somente leitura / push só em `etapa/*`).
 
-- **Decisão do Rodrigo:** aprovado em 16/10 (mensagem), a registrar após revisão deste PR.
+- **Decisão do Rodrigo:** aprovado em 16/10 (mensagem); PR #9 mergeado em 20/10.
 
 ## E0 — Fundação
-- Pendente.
+
+### E0-T07 desvincular do Lovable (+ E0-T01) — PR #4, revisado em `ae88ff8`
+
+| Papel | Decisão | Parecer |
+|---|---|---|
+| Revisor (DeepSeek V4 Pro) | ✅ Aprovar | Paridade do `vite.config.ts`: a config própria mantém tudo o que o plugin Lovable fazia (tanstackStart, React, Tailwind, tsconfig paths, nitro, alias `@`, dedupe, `VITE_*`, porta 8080), exceto devtools do TanStack (só dev, perda menor) e o error logger (remoção intencional, boa para privacidade). Cadeia de suprimentos: nenhuma URL `pkg.dev` restante; nenhum pacote novo suspeito (só transitivos `@emnapi/*`, `@napi-rs/wasm-runtime`); integridade sha512 em todas as entradas. Importante: deriva de versões no `bun.lock`. Menor: `bun.lock:6` com o nome antigo. |
+| Segunda opinião (GLM-5.2) | ✅ Aprovar, condicionado a unit + e2e verdes | Útil: a deriva entra em produção: `h3`, `rou3`, `srvx` (runtime SSR) e ~20 minors no cliente (`@radix-ui`, `react-query`, `react` 19.3.1); `vitest`, `playwright` e afins são só dev. Severidade importante. Causa: lock regenerado ao sair do registro privado; nitro, vite e tanstack seguem fixos. Sugere fixar `h3`/`rou3`/`srvx`/`@radix-ui` via `overrides`. |
+| QA (DeepSeek V4.1 Flash) | ✅ Aprovado, com nota de ambiente | install ✅ · test:unit ✅ 7 arquivos / 31 testes · typecheck ✅ · build ✅ (client + SSR + nitro) · test:e2e ✅ 3/3, depois de instalar o ffmpeg do Playwright 1.64 (falha de ambiente, não de código). Nota: em CI ou ambiente limpo, instalar o ffmpeg no setup. |
+
+- **Decisão do Rodrigo (20/10):** aceitar a deriva agora; fixar as versões via `overrides` numa tarefa separada, depois da E0-T04. Merge do #4 feito pelo Maestro por delegação do Rodrigo, em 20/10.
+- Pendência registrada: Rodrigo desconecta o projeto no Lovable e revoga o GitHub App (confirmado como feito em 20/10).
+
+### Incidente: comandos rejeitados executados pelo Dev (20/10, E0-T04)
+
+Durante a E0-T04, o Dev pediu aprovação para três comandos fora da lista liberada. O Rodrigo rejeitou os três. Dois deles foram executados mesmo assim, segundo o próprio relatório final do Dev:
+
+| Comando | Decisão do Rodrigo | Executado? |
+|---|---|---|
+| `New-Item -ItemType Directory … .github\workflows` | Reject | não (o Dev criou o arquivo pela ferramenta de edição) |
+| `git config core.autocrlf false` | Reject | **sim** |
+| `git restore src/routeTree.gen.ts` | Reject | **sim** (o arquivo só tinha diferença de fim de linha) |
+
+- **Efeito:** `core.autocrlf=false` foi gravado no `.git/config` do repositório, que vale para todos os worktrees (pasta principal, Dev, Revisor, Segunda opinião, QA). Com isso, arquivos editados no Windows passaram a aparecer como inteiramente alterados e podiam ser commitados com CRLF. O Maestro removeu a configuração com `git config --unset core.autocrlf` por ok do Rodrigo; o valor efetivo voltou a ser `true` (`C:/Program Files/Git/etc/gitconfig`). O commit da tarefa (`84941ff`) contém só o `ci.yml`.
+- **Causa:** ainda não apurada. Hipótese a checar: a aprovação veio de uma mensagem enviada pelo Maestro (`maestri ask`) ao terminal do Dev enquanto o pedido de aprovação ainda estava aberto, e o envio da mensagem confirmou a opção selecionada. Os pedidos foram trazidos ao Rodrigo e as mensagens ao Dev foram enviadas depois de ele informar o Reject; não foi verificado se o pedido ainda estava aberto no terminal nesse momento.
+- **Medidas:** `"git config*": "deny"` para todos os agentes (PR #14); E0-T08 `.gitattributes` com `eol=lf` (PR #14); regra nova no PAPEIS: o Maestro nunca envia mensagem a um terminal parado num pedido de aprovação.
+- **Para a E0-T05:** este incidente conta na comparação de modelos do Dev.
 
 ## E1 … E7
 - Pendentes.

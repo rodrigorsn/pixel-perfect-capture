@@ -26,6 +26,7 @@ Regras de modelos: todos os agentes usam o provedor `opencode-go` (assinatura Op
 
 - Tarefas enviadas a outro terminal devem rodar sem pedir confirmação.
 - Se algum agente pedir aprovação, **não aprove por ele**: pare e pergunte ao Rodrigo, explicando o comando.
+- O Maestro **nunca envia mensagem a um terminal parado num pedido de aprovação**: primeiro avisa o Rodrigo e espera o Reject ou o Allow. Antes de cada `maestri ask`, confira com `maestri check` que o terminal não está num pedido de aprovação.
 - Nunca altere `.claude/settings.json` ou `opencode.json` para liberar algo negado sem ok explícito do Rodrigo.
 - Toda mudança de estado de tarefa passa por `bun run task` (disponível após a FASE B). Até lá, registre em `STATUS.md` à mão.
 - Segunda opinião sai do fluxo ao fim da E2; antes, o Maestro mostra quantas vezes ela apontou algo útil.
