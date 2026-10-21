@@ -51,7 +51,7 @@
           "bun *": "allow", "bunx *": "allow", "ls*": "allow",
           "git status*": "allow", "git diff*": "allow", "git log*": "allow", "git show*": "allow",
           "git rev-parse*": "allow", "git branch --show-current*": "allow", "git ls-files*": "allow",
-          "git switch *": "allow", "git fetch*": "allow",
+          "git fetch*": "allow",
           "git push*": "deny", "git commit*": "deny", "rm -rf*": "deny"
         }
       }
