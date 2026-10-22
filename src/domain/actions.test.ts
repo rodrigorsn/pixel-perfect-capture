@@ -18,4 +18,4 @@ describe("ações", () => {
     const second = approveSuggestion(first.db, s, new Date("2026-01-01T00:00:00.000Z"));
     expect(second.error).toBeNull(); expect(second.db.actions).toHaveLength(first.db.actions.length);
   });
-});
+});

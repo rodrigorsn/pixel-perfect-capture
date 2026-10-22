@@ -24,4 +24,4 @@ export function approveSuggestion(db: Database, requested: ActionSuggestion, now
   const error = validateActionInput(input, concreteRisks, suggestion.campaignId); if (error) return { db, error, changed: false };
   const action: ActionPlanItem = { id: `act-${suggestion.id}`, ...input, followUpCriteria: input.executionIndicator, origin: "sugestao_simulada", originalProposal: structuredClone(suggestion.generatedProposal ?? suggestion), sourceSuggestionId: suggestion.id, status: "aprovada", implementedAt: null, effectivenessCheckedAt: null, effectivenessResult: null, createdAt: now.toISOString() };
   return { db: { ...db, suggestions: db.suggestions.map((item) => item.id === suggestion.id ? { ...item, status: "aprovada" } : item), actions: db.actions.some((item) => item.sourceSuggestionId === suggestion.id) ? db.actions : [...db.actions, action] }, error: null, changed: true };
-}
+}

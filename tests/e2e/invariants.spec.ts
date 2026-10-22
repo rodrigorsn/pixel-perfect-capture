@@ -44,4 +44,4 @@ test("aprovação relê risco alterado e não duplica ação", async ({ page }) 
   await page.reload();
   const afterReload = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "null") as Database, KEY);
   expect(afterReload.actions.filter((action) => action.sourceSuggestionId === "sug-e2e")).toHaveLength(1);
-});
+});
