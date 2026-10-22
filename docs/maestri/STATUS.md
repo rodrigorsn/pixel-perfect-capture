@@ -6,7 +6,7 @@ A E1 não começa sem a E0 aprovada (PAPEIS). O log ao vivo `.maestri/eventos.js
 
 ## Estado da `main`
 
-`4a0811e`. Entraram os PRs #1 a #17. Os merges de #4, #7 a #17 foram feitos pelo Maestro por delegação explícita do Rodrigo (20 e 21/10). A `main` tem `test:unit`, `typecheck`, `lint`, `test:e2e` e `build`, sem vínculo com o Lovable, **CI verde** (GitHub Actions, primeiro run na `main`: 39697634313) e `.gitattributes` com LF. Ainda não tem os scripts `task` e `status`.
+`950024c`. Entraram os PRs #1 a #17 e #19; o #18 (docs da E0) segue em rascunho. Os merges de #4, #7 a #17 e #19 foram feitos pelo Maestro por delegação explícita do Rodrigo (20 e 21/10). A `main` tem `test:unit`, `typecheck`, `lint`, `test:e2e` e `build`, sem vínculo com o Lovable, **CI verde** (GitHub Actions, primeiro run na `main`: 39697634313) `.gitattributes` com LF e `@radix-ui/*` fixados via `overrides`. Ainda não tem os scripts `task` e `status`.
 
 ## E0 — tarefas
 
@@ -21,17 +21,16 @@ A E1 não começa sem a E0 aprovada (PAPEIS). O log ao vivo `.maestri/eventos.js
 | E0-T06 destino do trabalho local não commitado | **concluída** (preservado e mergeado como E0-T03) | PR #3 |
 | E0-T07 desvincular do Lovable | **concluída**; pareceres em VALIDACOES | PR #4 |
 | E0-T08 `.gitattributes` LF + renormalização | **concluída** | PR #17 |
-| E0-T09 `overrides` de `h3`/`rou3`/`srvx`/`@radix-ui` + `packageManager` | **próxima** (Dev) | — |
+| E0-T09 `overrides` de `@radix-ui` + `packageManager` (`h3`/`rou3`/`srvx` ficam no lock: duas versões cada) | **concluída** | PR #19 |
 
-**Pronto da E0 (CRONOGRAMA):** CI verde na `main` ✅ e o vencedor da E0-T05 registrado em VALIDACOES. Faltam E0-T09, E0-T05 e E0-T00; depois, o PR "E0 — fechamento".
+**Pronto da E0 (CRONOGRAMA):** CI verde na `main` ✅ e o vencedor da E0-T05 registrado em VALIDACOES. Faltam E0-T05 e E0-T00; depois, o PR "E0 — fechamento".
 
 ## Próximas tarefas, nesta ordem
 
-1. E0-T09: fixar `h3`, `rou3`, `srvx` e `@radix-ui/*` via `overrides` e `packageManager: "bun@1.3.14"`. Fluxo completo.
-2. E0-T05: teste de modelos na mesma tarefa; Revisor compara e o vencedor vai para o VALIDACOES.
-3. E0-T00: painel `bun run task` / `bun run status` (deixa este arquivo gerado).
-4. PR "E0 — fechamento" e tag `etapa-E0`.
-5. E1, nesta ordem: E1-T00a, E1-T00e (setor órfão), E1-T00b–d, E1-T01 a E1-T05, E1-T08 e E1-T09.
+1. E0-T05: teste de modelos na mesma tarefa; Revisor compara e o vencedor vai para o VALIDACOES.
+2. E0-T00: painel `bun run task` / `bun run status` (deixa este arquivo gerado).
+3. PR "E0 — fechamento" e tag `etapa-E0`.
+4. E1, nesta ordem: E1-T00a, E1-T00e (setor órfão), E1-T00b–d, E1-T01 a E1-T05, E1-T08 e E1-T09.
 
 ## Trilha paralela
 
@@ -55,11 +54,12 @@ A E1 não começa sem a E0 aprovada (PAPEIS). O log ao vivo `.maestri/eventos.js
 - (20/10) Deriva de versões do `bun.lock` (#4) aceita; fixar via `overrides` em tarefa separada.
 - (20/10) Merges de #4 e #7 a #12 delegados ao Maestro pelo Rodrigo.
 - (20/10) Bash fora da lista negado aos agentes; trilha leve Maestro → Revisor → Rodrigo para docs, config e CI; um PR de docs por etapa (#15).
-- (21/10) Merges de #13 a #17 delegados ao Maestro pelo Rodrigo. CI: não cancela runs na `main` e timeout de 15 min (#16).
+- (21/10) Merges de #13 a #17 e #19 delegados ao Maestro pelo Rodrigo. CI: não cancela runs na `main` e timeout de 15 min (#16).
 - (21/10) E0-T08: três arquivos `.ts` estavam commitados com CRLF e um CR solto no final, o que fazia o git tratá-los como binários; convertidos para LF sem mudança de conteúdo (#17).
 
 ## A acompanhar
 
+- Sugestão da Segunda opinião na E0-T09: override também de `react`, `react-dom` e `react-query` (versão única no lock). Aguarda decisão do Rodrigo.
 - As actions do CI rodam em Node 20, que o GitHub está descontinuando; atualizar o SHA de `actions/checkout` e `oven-sh/setup-bun` quando houver versão em Node 24.
 
 ## Pendências do Rodrigo
