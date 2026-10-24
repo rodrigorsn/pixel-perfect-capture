@@ -23,12 +23,12 @@
     "dev": {
       "description": "Implementa uma tarefa por vez, com testes, na própria branch etapa/*",
       "mode": "primary",
-      "model": "opencode-go/kimi-k2.7-code"
+      "model": "opencode-go/deepseek-v4.1-flash"
     },
     "revisor": {
       "description": "Revisa branches: correção, invariantes de anonimato, simplicidade. Somente leitura.",
       "mode": "primary",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/kimi-k2.7-code",
       "permission": {
         "edit": "deny",
         "bash": {
