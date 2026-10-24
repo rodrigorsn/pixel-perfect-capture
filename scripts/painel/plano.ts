@@ -22,8 +22,7 @@ export interface SolicitacaoMudanca {
 }
 
 export type ResultadoMudanca =
-  | { ok: true; plano: Plano; evento: Evento; de: Estado }
-  | { ok: false; erro: string };
+  { ok: true; plano: Plano; evento: Evento; de: Estado } | { ok: false; erro: string };
 
 function ehObjeto(valor: unknown): valor is Record<string, unknown> {
   return typeof valor === "object" && valor !== null && !Array.isArray(valor);
@@ -146,7 +145,9 @@ export function analisarEventos(texto: string): Evento[] {
     const nota = valor["nota"];
 
     if (typeof ts !== "string" || typeof tarefa !== "string") {
-      throw new Error(`eventos.jsonl inválido na linha ${indice + 1}: ts e tarefa são obrigatórios.`);
+      throw new Error(
+        `eventos.jsonl inválido na linha ${indice + 1}: ts e tarefa são obrigatórios.`,
+      );
     }
     if (typeof de !== "string" || !ehEstado(de)) {
       throw new Error(`eventos.jsonl inválido na linha ${indice + 1}: de inválido.`);
@@ -202,10 +203,16 @@ export function mudarTarefa(
 
   const de = tarefa.estado;
   if (de === para) {
-    return { ok: false, erro: `Transição inválida: ${de} → ${para} (a tarefa já está nesse estado).` };
+    return {
+      ok: false,
+      erro: `Transição inválida: ${de} → ${para} (a tarefa já está nesse estado).`,
+    };
   }
   if (de === "concluida") {
-    return { ok: false, erro: `Transição inválida: concluida → ${para} (tarefa concluída não muda).` };
+    return {
+      ok: false,
+      erro: `Transição inválida: concluida → ${para} (tarefa concluída não muda).`,
+    };
   }
 
   const nota = solicitacao.nota?.trim();

@@ -73,19 +73,14 @@ export function renderizarQuadroMarkdown(plano: Plano): string {
 
   for (const etapa of plano.etapas) {
     const tarefas = tarefasDaEtapa(plano, etapa.id);
-    const linhas = [
-      `### ${escaparMarkdown(etapa.id)} — ${escaparMarkdown(etapa.titulo)}`,
-      "",
-    ];
+    const linhas = [`### ${escaparMarkdown(etapa.id)} — ${escaparMarkdown(etapa.titulo)}`, ""];
 
     if (tarefas.length === 0) {
       linhas.push("_Sem tarefas._");
     } else {
       linhas.push("| Estado | Quantidade | Tarefas |", "|---|---|---|");
       for (const estado of ESTADOS) {
-        const ids = tarefas
-          .filter((tarefa) => tarefa.estado === estado)
-          .map((tarefa) => tarefa.id);
+        const ids = tarefas.filter((tarefa) => tarefa.estado === estado).map((tarefa) => tarefa.id);
         const lista = ids.length > 0 ? ids.map(escaparMarkdown).join(", ") : "—";
         linhas.push(`| ${estado} | ${ids.length} | ${lista} |`);
       }

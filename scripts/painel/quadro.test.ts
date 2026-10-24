@@ -101,16 +101,20 @@ describe("bloco gerado no STATUS", () => {
 
 describe("detalhe da tarefa", () => {
   it("mostra a tarefa e o histórico do log", () => {
-    const texto = renderizarTarefa(planoDeTeste(), [
-      {
-        ts: "2026-10-24T11:00:00.000Z",
-        tarefa: "E0-T04",
-        de: "em_revisao",
-        para: "em_qa",
-        por: "Revisor",
-        nota: "aprovado",
-      },
-    ], "E0-T04");
+    const texto = renderizarTarefa(
+      planoDeTeste(),
+      [
+        {
+          ts: "2026-10-24T11:00:00.000Z",
+          tarefa: "E0-T04",
+          de: "em_revisao",
+          para: "em_qa",
+          por: "Revisor",
+          nota: "aprovado",
+        },
+      ],
+      "E0-T04",
+    );
 
     expect(texto).toContain("E0-T04 — CI");
     expect(texto).toContain("estado: em_qa");

@@ -34,7 +34,10 @@ describe("arquivos do painel", () => {
     await arquivos.gravarStatus("# STATUS\n");
     expect(await arquivos.lerStatus()).toBe("# STATUS\n");
 
-    expect((await readdir(join(raiz, "docs", "maestri"))).sort()).toEqual(["STATUS.md", "plano.json"]);
+    expect((await readdir(join(raiz, "docs", "maestri"))).sort()).toEqual([
+      "STATUS.md",
+      "plano.json",
+    ]);
   });
 
   it("acrescenta eventos sem sobrescrever o log", async () => {
@@ -63,6 +66,9 @@ describe("arquivos do painel", () => {
     const linhas = ((await arquivos.lerEventos()) ?? "").trim().split("\n");
     expect(linhas).toHaveLength(2);
     expect(JSON.parse(linhas[0] ?? "")).toMatchObject({ tarefa: "E0-T00", para: "em_andamento" });
-    expect(JSON.parse(linhas[1] ?? "")).toMatchObject({ para: "em_revisao", nota: "pronto para revisão" });
+    expect(JSON.parse(linhas[1] ?? "")).toMatchObject({
+      para: "em_revisao",
+      nota: "pronto para revisão",
+    });
   });
 });

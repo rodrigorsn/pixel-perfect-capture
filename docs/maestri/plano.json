@@ -12,27 +12,159 @@
     { "id": "P", "titulo": "Trilha paralela" }
   ],
   "tarefas": [
-    { "id": "E0-T00", "etapa": "E0", "titulo": "Painel bun run task, painel e status", "papel": "D", "estado": "em_andamento" },
-    { "id": "E0-T01", "etapa": "E0", "titulo": "Instalação reproduzível fora do Lovable", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T02", "etapa": "E0", "titulo": "Typecheck limpo", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T03", "etapa": "E0", "titulo": "Scripts test e typecheck na main", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T04", "etapa": "E0", "titulo": "CI GitHub Actions: test + typecheck + build", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T05", "etapa": "E0", "titulo": "Teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash", "papel": "D", "estado": "em_andamento" },
-    { "id": "E0-T06", "etapa": "E0", "titulo": "Destino do trabalho local não commitado", "papel": "P", "estado": "concluida" },
-    { "id": "E0-T07", "etapa": "E0", "titulo": "Desvincular do Lovable", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T08", "etapa": "E0", "titulo": "Padronizar fins de linha", "papel": "D", "estado": "concluida" },
-    { "id": "E0-T09", "etapa": "E0", "titulo": "Fixar versões via overrides (h3, rou3, srvx e @radix-ui)", "papel": "D", "estado": "concluida" },
-    { "id": "E1-T00a", "etapa": "E1", "titulo": "repository.load reaplica o piso de 5 no tamanho mínimo de grupo", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T00b", "etapa": "E1", "titulo": "store: useRef com o estado mais recente e retorno verificado em update()", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T00c", "etapa": "E1", "titulo": "Testes sintéticos da supressão complementar com ≥3 escopos", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T00d", "etapa": "E1", "titulo": "Gate hydrated em todas as páginas que gravam", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T01", "etapa": "E1", "titulo": "calc: normalização e itens invertidos", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T02", "etapa": "E1", "titulo": "calc: mínimo 2 de 3 itens, mínimo 3 participantes, ausência ≠ zero", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T03", "etapa": "E1", "titulo": "privacy: mínimo do grupo + supressão complementar", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T04", "etapa": "E1", "titulo": "suggestions: nunca aprova sozinho, nunca recebe dado individual", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T05", "etapa": "E1", "titulo": "Congelamento do instrumento na abertura da campanha", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T00e", "etapa": "E1", "titulo": "Remover setor referenciado por campanhas, respostas ou riscos", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T08", "etapa": "E1", "titulo": "Empresa e setores: aviso ao sair com alterações não salvas", "papel": "D", "estado": "a_fazer" },
-    { "id": "E1-T09", "etapa": "E1", "titulo": "Empresa e setores: validar nome, soma dos setores e campo numérico", "papel": "D", "estado": "a_fazer" }
+    {
+      "id": "E0-T00",
+      "etapa": "E0",
+      "titulo": "Painel bun run task, painel e status",
+      "papel": "D",
+      "estado": "em_andamento"
+    },
+    {
+      "id": "E0-T01",
+      "etapa": "E0",
+      "titulo": "Instalação reproduzível fora do Lovable",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T02",
+      "etapa": "E0",
+      "titulo": "Typecheck limpo",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T03",
+      "etapa": "E0",
+      "titulo": "Scripts test e typecheck na main",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T04",
+      "etapa": "E0",
+      "titulo": "CI GitHub Actions: test + typecheck + build",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T05",
+      "etapa": "E0",
+      "titulo": "Teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash",
+      "papel": "D",
+      "estado": "em_andamento"
+    },
+    {
+      "id": "E0-T06",
+      "etapa": "E0",
+      "titulo": "Destino do trabalho local não commitado",
+      "papel": "P",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T07",
+      "etapa": "E0",
+      "titulo": "Desvincular do Lovable",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T08",
+      "etapa": "E0",
+      "titulo": "Padronizar fins de linha",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E0-T09",
+      "etapa": "E0",
+      "titulo": "Fixar versões via overrides (h3, rou3, srvx e @radix-ui)",
+      "papel": "D",
+      "estado": "concluida"
+    },
+    {
+      "id": "E1-T00a",
+      "etapa": "E1",
+      "titulo": "repository.load reaplica o piso de 5 no tamanho mínimo de grupo",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T00b",
+      "etapa": "E1",
+      "titulo": "store: useRef com o estado mais recente e retorno verificado em update()",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T00c",
+      "etapa": "E1",
+      "titulo": "Testes sintéticos da supressão complementar com ≥3 escopos",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T00d",
+      "etapa": "E1",
+      "titulo": "Gate hydrated em todas as páginas que gravam",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T01",
+      "etapa": "E1",
+      "titulo": "calc: normalização e itens invertidos",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T02",
+      "etapa": "E1",
+      "titulo": "calc: mínimo 2 de 3 itens, mínimo 3 participantes, ausência ≠ zero",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T03",
+      "etapa": "E1",
+      "titulo": "privacy: mínimo do grupo + supressão complementar",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T04",
+      "etapa": "E1",
+      "titulo": "suggestions: nunca aprova sozinho, nunca recebe dado individual",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T05",
+      "etapa": "E1",
+      "titulo": "Congelamento do instrumento na abertura da campanha",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T00e",
+      "etapa": "E1",
+      "titulo": "Remover setor referenciado por campanhas, respostas ou riscos",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T08",
+      "etapa": "E1",
+      "titulo": "Empresa e setores: aviso ao sair com alterações não salvas",
+      "papel": "D",
+      "estado": "a_fazer"
+    },
+    {
+      "id": "E1-T09",
+      "etapa": "E1",
+      "titulo": "Empresa e setores: validar nome, soma dos setores e campo numérico",
+      "papel": "D",
+      "estado": "a_fazer"
+    }
   ]
 }

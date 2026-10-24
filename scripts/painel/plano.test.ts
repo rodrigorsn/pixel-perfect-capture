@@ -123,22 +123,42 @@ describe("transições de tarefa", () => {
   it("não altera o plano original", () => {
     const plano = planoCom("em_andamento");
     const antes = JSON.stringify(plano);
-    const resultado = mudarTarefa(plano, [], { id: "E9-T01", para: "em_revisao", por: "Dev" }, agora);
+    const resultado = mudarTarefa(
+      plano,
+      [],
+      { id: "E9-T01", para: "em_revisao", por: "Dev" },
+      agora,
+    );
 
     expect(resultado.ok).toBe(true);
     expect(JSON.stringify(plano)).toBe(antes);
   });
 
   it("recusa ID, estado e papel desconhecidos", () => {
-    const desconhecida = mudarTarefa(planoCom("a_fazer"), [], { id: "X", para: "em_andamento", por: "Dev" }, agora);
+    const desconhecida = mudarTarefa(
+      planoCom("a_fazer"),
+      [],
+      { id: "X", para: "em_andamento", por: "Dev" },
+      agora,
+    );
     expect(desconhecida.ok).toBe(false);
     if (!desconhecida.ok) expect(desconhecida.erro).toContain("Tarefa desconhecida");
 
-    const estadoRuim = mudarTarefa(planoCom("a_fazer"), [], { id: "E9-T01", para: "pronto", por: "Dev" }, agora);
+    const estadoRuim = mudarTarefa(
+      planoCom("a_fazer"),
+      [],
+      { id: "E9-T01", para: "pronto", por: "Dev" },
+      agora,
+    );
     expect(estadoRuim.ok).toBe(false);
     if (!estadoRuim.ok) expect(estadoRuim.erro).toContain("Estado inválido");
 
-    const papelRuim = mudarTarefa(planoCom("a_fazer"), [], { id: "E9-T01", para: "em_andamento", por: "dev" }, agora);
+    const papelRuim = mudarTarefa(
+      planoCom("a_fazer"),
+      [],
+      { id: "E9-T01", para: "em_andamento", por: "dev" },
+      agora,
+    );
     expect(papelRuim.ok).toBe(false);
     if (!papelRuim.ok) expect(papelRuim.erro).toContain("--por inválido");
   });
@@ -189,7 +209,12 @@ describe("bloqueio", () => {
   });
 
   it("recusa desbloqueio sem evento ou com log inconsistente", () => {
-    const semLog = mudarTarefa(planoCom("bloqueada"), [], { id: "E9-T01", para: "a_fazer", por: "Maestro" }, agora);
+    const semLog = mudarTarefa(
+      planoCom("bloqueada"),
+      [],
+      { id: "E9-T01", para: "a_fazer", por: "Maestro" },
+      agora,
+    );
     expect(semLog.ok).toBe(false);
     if (!semLog.ok) expect(semLog.erro).toContain("sem evento de bloqueio");
 
@@ -211,7 +236,13 @@ describe("bloqueio", () => {
   });
 
   it("permite bloquear a partir de qualquer estado não concluído", () => {
-    for (const estado of ["a_fazer", "em_andamento", "em_revisao", "em_qa", "aguardando_rodrigo"] as const) {
+    for (const estado of [
+      "a_fazer",
+      "em_andamento",
+      "em_revisao",
+      "em_qa",
+      "aguardando_rodrigo",
+    ] as const) {
       const resultado = mudarTarefa(
         planoCom(estado),
         [],
@@ -232,7 +263,12 @@ describe("limite de uma tarefa D em andamento", () => {
       tarefa("E1-T02", "E1", "D", "a_fazer"),
     ]);
 
-    const primeiro = mudarTarefa(plano, [], { id: "E1-T01", para: "em_andamento", por: "Dev" }, agora);
+    const primeiro = mudarTarefa(
+      plano,
+      [],
+      { id: "E1-T01", para: "em_andamento", por: "Dev" },
+      agora,
+    );
     expect(primeiro.ok).toBe(true);
     if (!primeiro.ok) return;
 
@@ -252,7 +288,12 @@ describe("limite de uma tarefa D em andamento", () => {
       tarefa("E1-T01", "E1", "D", "a_fazer"),
     ]);
 
-    const resultado = mudarTarefa(plano, [], { id: "E1-T01", para: "em_andamento", por: "Dev" }, agora);
+    const resultado = mudarTarefa(
+      plano,
+      [],
+      { id: "E1-T01", para: "em_andamento", por: "Dev" },
+      agora,
+    );
     expect(resultado.ok).toBe(true);
   });
 
@@ -283,19 +324,31 @@ describe("leitura do plano e do log", () => {
     expect(() => analisarPlano("{")).toThrow(/JSON/);
 
     const base = planoCom("a_fazer");
-    const duplicada = { id: "E9-T01", etapa: "E9", titulo: "Duplicada", papel: "D", estado: "a_fazer" };
-    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [...base.tarefas, duplicada] }))).toThrow(
-      /duplicada/,
-    );
+    const duplicada = {
+      id: "E9-T01",
+      etapa: "E9",
+      titulo: "Duplicada",
+      papel: "D",
+      estado: "a_fazer",
+    };
+    expect(() =>
+      analisarPlano(JSON.stringify({ ...base, tarefas: [...base.tarefas, duplicada] })),
+    ).toThrow(/duplicada/);
 
     const orfa = { id: "E9-T02", etapa: "E8", titulo: "Órfã", papel: "D", estado: "a_fazer" };
-    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [orfa] }))).toThrow(/inexistente/);
+    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [orfa] }))).toThrow(
+      /inexistente/,
+    );
 
     const estadoRuim = { id: "E9-T02", etapa: "E9", titulo: "Ruim", papel: "D", estado: "pronto" };
-    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [estadoRuim] }))).toThrow(/estado inválido/);
+    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [estadoRuim] }))).toThrow(
+      /estado inválido/,
+    );
 
     const papelRuim = { id: "E9-T02", etapa: "E9", titulo: "Ruim", papel: "X", estado: "a_fazer" };
-    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [papelRuim] }))).toThrow(/papel inválido/);
+    expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [papelRuim] }))).toThrow(
+      /papel inválido/,
+    );
   });
 
   it("lê o log JSONL ignorando linhas vazias", () => {

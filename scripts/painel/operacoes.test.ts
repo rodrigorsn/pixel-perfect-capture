@@ -51,9 +51,7 @@ function planoTexto(): string {
   return serializarPlano({
     versao: 1,
     etapas: [{ id: "E0", titulo: "Fundação" }],
-    tarefas: [
-      { id: "E0-T00", etapa: "E0", titulo: "Painel", papel: "D", estado: "em_andamento" },
-    ],
+    tarefas: [{ id: "E0-T00", etapa: "E0", titulo: "Painel", papel: "D", estado: "em_andamento" }],
   });
 }
 

@@ -10,16 +10,11 @@ import {
 import { atualizarBlocoStatus, renderizarQuadroMarkdown, renderizarTarefa } from "./quadro.ts";
 
 export type ResultadoExecucao =
-  | { ok: true; de: Estado; para: Estado }
-  | { ok: false; erro: string };
+  { ok: true; de: Estado; para: Estado } | { ok: false; erro: string };
 
-export type ResultadoConsulta =
-  | { ok: true; texto: string }
-  | { ok: false; erro: string };
+export type ResultadoConsulta = { ok: true; texto: string } | { ok: false; erro: string };
 
-export type ResultadoStatus =
-  | { ok: true; alterado: boolean }
-  | { ok: false; erro: string };
+export type ResultadoStatus = { ok: true; alterado: boolean } | { ok: false; erro: string };
 
 export function mensagemDeErro(erro: unknown): string {
   return erro instanceof Error ? erro.message : String(erro);
