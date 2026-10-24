@@ -83,6 +83,7 @@ export function validarPlano(valor: unknown): Plano {
     const titulo = exigirTexto(item["titulo"], `tarefas[${indice}].titulo`);
     const papel = exigirTexto(item["papel"], `tarefas[${indice}].papel`);
     const estado = exigirTexto(item["estado"], `tarefas[${indice}].estado`);
+    const antesDoBloqueio = item["antesDoBloqueio"];
 
     if (idsTarefas.has(id)) {
       throw new Error(`plano.json inválido: tarefa duplicada ${id}.`);
@@ -98,8 +99,25 @@ export function validarPlano(valor: unknown): Plano {
     if (!ehEstado(estado)) {
       throw new Error(`plano.json inválido: estado inválido em ${id}: ${estado}.`);
     }
+    if (antesDoBloqueio !== undefined) {
+      if (typeof antesDoBloqueio !== "string" || !ehEstado(antesDoBloqueio)) {
+        throw new Error(`plano.json inválido: antesDoBloqueio inválido em ${id}.`);
+      }
+      if (antesDoBloqueio === "bloqueada" || antesDoBloqueio === "concluida") {
+        throw new Error(
+          `plano.json inválido: antesDoBloqueio inválido em ${id}: ${antesDoBloqueio}.`,
+        );
+      }
+      if (estado !== "bloqueada") {
+        throw new Error(
+          `plano.json inválido: antesDoBloqueio só pode existir em tarefa bloqueada (${id}).`,
+        );
+      }
+    }
 
-    tarefas.push({ id, etapa, titulo, papel, estado });
+    const tarefa: Tarefa = { id, etapa, titulo, papel, estado };
+    if (antesDoBloqueio !== undefined) tarefa.antesDoBloqueio = antesDoBloqueio;
+    tarefas.push(tarefa);
   }
 
   return { versao, etapas, tarefas };
@@ -170,19 +188,8 @@ export function analisarEventos(texto: string): Evento[] {
   return eventos;
 }
 
-export function ultimoBloqueio(eventos: Evento[], tarefaId: string): Evento | null {
-  for (let indice = eventos.length - 1; indice >= 0; indice -= 1) {
-    const evento = eventos[indice];
-    if (evento !== undefined && evento.tarefa === tarefaId && evento.para === "bloqueada") {
-      return evento;
-    }
-  }
-  return null;
-}
-
 export function mudarTarefa(
   plano: Plano,
-  eventos: Evento[],
   solicitacao: SolicitacaoMudanca,
   agora: Date,
 ): ResultadoMudanca {
@@ -221,24 +228,17 @@ export function mudarTarefa(
   }
 
   if (de === "bloqueada") {
-    const bloqueio = ultimoBloqueio(eventos, tarefa.id);
-    if (bloqueio === null) {
+    const anterior = tarefa.antesDoBloqueio;
+    if (anterior === undefined) {
       return {
         ok: false,
-        erro: "Tarefa bloqueada sem evento de bloqueio no log; não é possível restaurar o estado anterior.",
-      };
-    }
-    const anterior = bloqueio.de;
-    if (!ehEstado(anterior) || anterior === "bloqueada" || anterior === "concluida") {
-      return {
-        ok: false,
-        erro: `Log inconsistente para ${tarefa.id}: bloqueio registrado a partir de ${anterior}.`,
+        erro: `Tarefa bloqueada sem antesDoBloqueio no plano.json; não é possível restaurar o estado anterior.`,
       };
     }
     if (para !== anterior) {
       return {
         ok: false,
-        erro: `Transição inválida: bloqueada → ${para}. O último bloqueio veio de ${anterior}; a tarefa só volta para ${anterior}.`,
+        erro: `Transição inválida: bloqueada → ${para}. O bloqueio anterior veio de ${anterior}; a tarefa só volta para ${anterior}.`,
       };
     }
   } else if (para !== "bloqueada" && !TRANSICOES[de].includes(para)) {
@@ -267,11 +267,17 @@ export function mudarTarefa(
 
   const base = { ts: agora.toISOString(), tarefa: tarefa.id, de, para, por };
   const evento: Evento = nota ? { ...base, nota } : base;
+
+  const atualizada: Tarefa = { ...tarefa, estado: para };
+  if (para === "bloqueada") {
+    atualizada.antesDoBloqueio = de;
+  } else if (de === "bloqueada") {
+    delete atualizada.antesDoBloqueio;
+  }
+
   const novoPlano: Plano = {
     ...plano,
-    tarefas: plano.tarefas.map((item) =>
-      item.id === tarefa.id ? { ...item, estado: para } : item,
-    ),
+    tarefas: plano.tarefas.map((item) => (item.id === tarefa.id ? atualizada : item)),
   };
 
   return { ok: true, plano: novoPlano, evento, de };

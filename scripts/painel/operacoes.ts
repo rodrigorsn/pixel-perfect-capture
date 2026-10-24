@@ -32,8 +32,7 @@ export async function executarMudanca(
     }
 
     const plano = analisarPlano(textoPlano);
-    const eventos = analisarEventos((await arquivos.lerEventos()) ?? "");
-    const resultado = mudarTarefa(plano, eventos, solicitacao, agora);
+    const resultado = mudarTarefa(plano, solicitacao, agora);
 
     if (!resultado.ok) return { ok: false, erro: resultado.erro };
 

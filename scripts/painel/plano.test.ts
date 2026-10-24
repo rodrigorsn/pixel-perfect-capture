@@ -4,11 +4,17 @@ import { analisarEventos, analisarPlano, mudarTarefa } from "./plano.ts";
 
 const agora = new Date("2026-10-24T12:00:00.000Z");
 
-function planoCom(estado: Estado, papel: "D" | "R" = "R"): Plano {
+function tarefaBase(estado: Estado, antesDoBloqueio?: Estado): Tarefa {
+  const tarefa: Tarefa = { id: "E9-T01", etapa: "E9", titulo: "Tarefa", papel: "R", estado };
+  if (antesDoBloqueio !== undefined) tarefa.antesDoBloqueio = antesDoBloqueio;
+  return tarefa;
+}
+
+function planoCom(estado: Estado, antesDoBloqueio?: Estado): Plano {
   return {
     versao: 1,
     etapas: [{ id: "E9", titulo: "Teste" }],
-    tarefas: [{ id: "E9-T01", etapa: "E9", titulo: "Tarefa", papel, estado }],
+    tarefas: [tarefaBase(estado, antesDoBloqueio)],
   };
 }
 
@@ -47,7 +53,6 @@ describe("transições de tarefa", () => {
     for (const [de, para, comNota] of validas) {
       const resultado = mudarTarefa(
         planoCom(de),
-        [],
         {
           id: "E9-T01",
           para,
@@ -75,7 +80,6 @@ describe("transições de tarefa", () => {
     for (const [de, para] of invalidas) {
       const resultado = mudarTarefa(
         planoCom(de),
-        [],
         { id: "E9-T01", para, por: "Dev", nota: "tentativa" },
         agora,
       );
@@ -96,7 +100,6 @@ describe("transições de tarefa", () => {
       for (const nota of [undefined, "   "]) {
         const resultado = mudarTarefa(
           planoCom(de),
-          [],
           { id: "E9-T01", para, por: "Dev", ...(nota === undefined ? {} : { nota }) },
           agora,
         );
@@ -109,7 +112,6 @@ describe("transições de tarefa", () => {
   it("aceita nota opcional e grava o evento em UTC", () => {
     const resultado = mudarTarefa(
       planoCom("em_revisao"),
-      [],
       { id: "E9-T01", para: "em_andamento", por: "Revisor", nota: "  ajustar testes  " },
       agora,
     );
@@ -123,12 +125,7 @@ describe("transições de tarefa", () => {
   it("não altera o plano original", () => {
     const plano = planoCom("em_andamento");
     const antes = JSON.stringify(plano);
-    const resultado = mudarTarefa(
-      plano,
-      [],
-      { id: "E9-T01", para: "em_revisao", por: "Dev" },
-      agora,
-    );
+    const resultado = mudarTarefa(plano, { id: "E9-T01", para: "em_revisao", por: "Dev" }, agora);
 
     expect(resultado.ok).toBe(true);
     expect(JSON.stringify(plano)).toBe(antes);
@@ -137,7 +134,6 @@ describe("transições de tarefa", () => {
   it("recusa ID, estado e papel desconhecidos", () => {
     const desconhecida = mudarTarefa(
       planoCom("a_fazer"),
-      [],
       { id: "X", para: "em_andamento", por: "Dev" },
       agora,
     );
@@ -146,7 +142,6 @@ describe("transições de tarefa", () => {
 
     const estadoRuim = mudarTarefa(
       planoCom("a_fazer"),
-      [],
       { id: "E9-T01", para: "pronto", por: "Dev" },
       agora,
     );
@@ -155,7 +150,6 @@ describe("transições de tarefa", () => {
 
     const papelRuim = mudarTarefa(
       planoCom("a_fazer"),
-      [],
       { id: "E9-T01", para: "em_andamento", por: "dev" },
       agora,
     );
@@ -165,20 +159,21 @@ describe("transições de tarefa", () => {
 });
 
 describe("bloqueio", () => {
-  it("volta ao estado anterior lido do último evento de bloqueio", () => {
+  it("volta ao estado anterior gravado no plano, sem depender do log", () => {
     const bloqueio = mudarTarefa(
       planoCom("em_qa"),
-      [],
       { id: "E9-T01", para: "bloqueada", por: "Maestro", nota: "aguardando decisão" },
       agora,
     );
     expect(bloqueio.ok).toBe(true);
     if (!bloqueio.ok) return;
-    expect(bloqueio.plano.tarefas[0]?.estado).toBe("bloqueada");
+
+    const bloqueada = bloqueio.plano.tarefas[0];
+    expect(bloqueada?.estado).toBe("bloqueada");
+    expect(bloqueada?.antesDoBloqueio).toBe("em_qa");
 
     const volta = mudarTarefa(
       bloqueio.plano,
-      [bloqueio.evento],
       { id: "E9-T01", para: "em_qa", por: "Maestro" },
       agora,
     );
@@ -186,12 +181,12 @@ describe("bloqueio", () => {
     if (!volta.ok) return;
     expect(volta.de).toBe("bloqueada");
     expect(volta.plano.tarefas[0]?.estado).toBe("em_qa");
+    expect(volta.plano.tarefas[0]).not.toHaveProperty("antesDoBloqueio");
   });
 
   it("recusa destino diferente do estado anterior", () => {
     const bloqueio = mudarTarefa(
       planoCom("em_qa"),
-      [],
       { id: "E9-T01", para: "bloqueada", por: "Maestro", nota: "bloqueado" },
       agora,
     );
@@ -200,7 +195,6 @@ describe("bloqueio", () => {
 
     const errada = mudarTarefa(
       bloqueio.plano,
-      [bloqueio.evento],
       { id: "E9-T01", para: "em_andamento", por: "Dev" },
       agora,
     );
@@ -208,31 +202,24 @@ describe("bloqueio", () => {
     if (!errada.ok) expect(errada.erro).toContain("em_qa");
   });
 
-  it("recusa desbloqueio sem evento ou com log inconsistente", () => {
-    const semLog = mudarTarefa(
+  it("recusa desbloqueio sem antesDoBloqueio no plano", () => {
+    const resultado = mudarTarefa(
       planoCom("bloqueada"),
-      [],
       { id: "E9-T01", para: "a_fazer", por: "Maestro" },
       agora,
     );
-    expect(semLog.ok).toBe(false);
-    if (!semLog.ok) expect(semLog.erro).toContain("sem evento de bloqueio");
+    expect(resultado.ok).toBe(false);
+    if (!resultado.ok) expect(resultado.erro).toContain("antesDoBloqueio");
+  });
 
-    const inconsistente: Evento = {
-      ts: "2026-10-24T11:00:00.000Z",
-      tarefa: "E9-T01",
-      de: "concluida",
-      para: "bloqueada",
-      por: "Maestro",
-    };
+  it("recusa bloquear tarefa já bloqueada", () => {
     const resultado = mudarTarefa(
-      planoCom("bloqueada"),
-      [inconsistente],
-      { id: "E9-T01", para: "concluida", por: "Maestro" },
+      planoCom("bloqueada", "em_qa"),
+      { id: "E9-T01", para: "bloqueada", por: "Maestro", nota: "de novo" },
       agora,
     );
     expect(resultado.ok).toBe(false);
-    if (!resultado.ok) expect(resultado.erro).toContain("Log inconsistente");
+    if (!resultado.ok) expect(resultado.erro).toContain("já está nesse estado");
   });
 
   it("permite bloquear a partir de qualquer estado não concluído", () => {
@@ -245,11 +232,12 @@ describe("bloqueio", () => {
     ] as const) {
       const resultado = mudarTarefa(
         planoCom(estado),
-        [],
         { id: "E9-T01", para: "bloqueada", por: "Maestro", nota: "impedimento" },
         agora,
       );
       expect(resultado.ok, estado).toBe(true);
+      if (!resultado.ok) continue;
+      expect(resultado.plano.tarefas[0]?.antesDoBloqueio).toBe(estado);
     }
   });
 });
@@ -263,18 +251,12 @@ describe("limite de uma tarefa D em andamento", () => {
       tarefa("E1-T02", "E1", "D", "a_fazer"),
     ]);
 
-    const primeiro = mudarTarefa(
-      plano,
-      [],
-      { id: "E1-T01", para: "em_andamento", por: "Dev" },
-      agora,
-    );
+    const primeiro = mudarTarefa(plano, { id: "E1-T01", para: "em_andamento", por: "Dev" }, agora);
     expect(primeiro.ok).toBe(true);
     if (!primeiro.ok) return;
 
     const segundo = mudarTarefa(
       primeiro.plano,
-      [primeiro.evento],
       { id: "E1-T02", para: "em_andamento", por: "Dev" },
       agora,
     );
@@ -288,12 +270,7 @@ describe("limite de uma tarefa D em andamento", () => {
       tarefa("E1-T01", "E1", "D", "a_fazer"),
     ]);
 
-    const resultado = mudarTarefa(
-      plano,
-      [],
-      { id: "E1-T01", para: "em_andamento", por: "Dev" },
-      agora,
-    );
+    const resultado = mudarTarefa(plano, { id: "E1-T01", para: "em_andamento", por: "Dev" }, agora);
     expect(resultado.ok).toBe(true);
   });
 
@@ -304,20 +281,20 @@ describe("limite de uma tarefa D em andamento", () => {
       tarefa("E0-T09", "E0", "D", "a_fazer"),
     ]);
 
-    const teste = mudarTarefa(plano, [], { id: "E0-T05", para: "em_andamento", por: "Dev" }, agora);
+    const teste = mudarTarefa(plano, { id: "E0-T05", para: "em_andamento", por: "Dev" }, agora);
     expect(teste.ok).toBe(true);
 
-    const outro = mudarTarefa(plano, [], { id: "E0-T09", para: "em_andamento", por: "Dev" }, agora);
+    const outro = mudarTarefa(plano, { id: "E0-T09", para: "em_andamento", por: "Dev" }, agora);
     expect(outro.ok).toBe(false);
     if (!outro.ok) expect(outro.erro).toContain("E0-T00");
   });
 });
 
 describe("leitura do plano e do log", () => {
-  it("aceita um plano válido", () => {
-    const plano = analisarPlano(JSON.stringify(planoCom("a_fazer", "D")));
+  it("aceita um plano válido, inclusive bloqueado com antesDoBloqueio", () => {
+    const plano = analisarPlano(JSON.stringify(planoCom("bloqueada", "em_qa")));
     expect(plano.tarefas).toHaveLength(1);
-    expect(plano.tarefas[0]?.estado).toBe("a_fazer");
+    expect(plano.tarefas[0]?.antesDoBloqueio).toBe("em_qa");
   });
 
   it("recusa JSON malformado e estruturas inválidas", () => {
@@ -349,6 +326,34 @@ describe("leitura do plano e do log", () => {
     expect(() => analisarPlano(JSON.stringify({ ...base, tarefas: [papelRuim] }))).toThrow(
       /papel inválido/,
     );
+  });
+
+  it("recusa antesDoBloqueio fora de tarefa bloqueada ou com valor inválido", () => {
+    const foraDeBloqueio = {
+      id: "E9-T01",
+      etapa: "E9",
+      titulo: "Tarefa",
+      papel: "R",
+      estado: "a_fazer",
+      antesDoBloqueio: "em_qa",
+    };
+    expect(() =>
+      analisarPlano(JSON.stringify({ ...planoCom("a_fazer"), tarefas: [foraDeBloqueio] })),
+    ).toThrow(/só pode existir em tarefa bloqueada/);
+
+    for (const valor of ["concluida", "bloqueada", "pronto", 7]) {
+      const invalido = {
+        id: "E9-T01",
+        etapa: "E9",
+        titulo: "Tarefa",
+        papel: "R",
+        estado: "bloqueada",
+        antesDoBloqueio: valor,
+      };
+      expect(() =>
+        analisarPlano(JSON.stringify({ ...planoCom("bloqueada"), tarefas: [invalido] })),
+      ).toThrow(/antesDoBloqueio inválido/);
+    }
   });
 
   it("lê o log JSONL ignorando linhas vazias", () => {

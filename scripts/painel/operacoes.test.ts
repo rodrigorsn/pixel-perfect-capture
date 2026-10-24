@@ -108,7 +108,7 @@ describe("executar mudança", () => {
     expect(arquivos.gravacoes).toEqual([]);
   });
 
-  it("não grava nada quando o log está corrompido", async () => {
+  it("ignora o log corrompido ao mudar", async () => {
     const arquivos = new ArquivosFalsos(planoTexto(), "{");
 
     const resultado = await executarMudanca(
@@ -117,8 +117,40 @@ describe("executar mudança", () => {
       agora,
     );
 
-    expect(resultado.ok).toBe(false);
-    expect(arquivos.gravacoes).toEqual([]);
+    expect(resultado.ok).toBe(true);
+    expect(arquivos.gravacoes).toEqual(["plano", "evento"]);
+  });
+
+  it("bloqueia e desbloqueia mesmo se o log se perder", async () => {
+    const arquivos = new ArquivosFalsos(planoTexto());
+
+    const bloqueio = await executarMudanca(
+      arquivos,
+      { id: "E0-T00", para: "bloqueada", por: "Maestro", nota: "impedimento" },
+      agora,
+    );
+    expect(bloqueio).toEqual({ ok: true, de: "em_andamento", para: "bloqueada" });
+
+    const planoBloqueado = JSON.parse(arquivos.plano ?? "") as {
+      tarefas: Array<{ estado: string; antesDoBloqueio?: string }>;
+    };
+    expect(planoBloqueado.tarefas[0]?.estado).toBe("bloqueada");
+    expect(planoBloqueado.tarefas[0]?.antesDoBloqueio).toBe("em_andamento");
+
+    arquivos.log = "";
+
+    const volta = await executarMudanca(
+      arquivos,
+      { id: "E0-T00", para: "em_andamento", por: "Maestro" },
+      agora,
+    );
+    expect(volta).toEqual({ ok: true, de: "bloqueada", para: "em_andamento" });
+
+    const planoLiberado = JSON.parse(arquivos.plano ?? "") as {
+      tarefas: Array<{ estado: string; antesDoBloqueio?: string }>;
+    };
+    expect(planoLiberado.tarefas[0]?.estado).toBe("em_andamento");
+    expect(planoLiberado.tarefas[0]).not.toHaveProperty("antesDoBloqueio");
   });
 });
 

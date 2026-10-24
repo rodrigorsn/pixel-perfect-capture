@@ -29,6 +29,7 @@ export interface Tarefa {
   titulo: string;
   papel: PapelTarefa;
   estado: Estado;
+  antesDoBloqueio?: Estado;
 }
 
 export interface Plano {
