@@ -12,7 +12,10 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "task": "bun scripts/painel/task.ts",
+    "painel": "bun scripts/painel/painel.ts",
+    "status": "bun scripts/painel/status.ts"
   },
   "packageManager": "bun@1.3.14",
   "overrides": {
