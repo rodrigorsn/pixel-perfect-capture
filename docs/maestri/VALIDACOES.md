@@ -83,5 +83,33 @@ Durante a E0-T04, o Dev pediu aprovação para três comandos fora da lista libe
 
 - **Decisão do Rodrigo (21/10):** merge do #19 pelo Maestro por autorização do Rodrigo. Sugestão da Segunda opinião (override de `react`, `react-dom`, `react-query`) fica para decisão.
 
+### E0-T05 teste de modelos (Kimi K2.7 Code × DeepSeek V4.1 Flash) com a E0-T00 painel — 24/10
+
+Mesma especificação, palavra por palavra, para os dois, em worktrees e branches separados (`etapa/E0-T00-kimi` e `etapa/E0-T00-deepseek`, base `950024c`), os dois com o OpenCode reiniciado e a mesma config (bash fora da lista negado).
+
+| Critério | Kimi K2.7 Code (`1087177`) | DeepSeek V4.1 Flash (`c303be2`) |
+|---|---|---|
+| Tempo | 6m30s | 12m24s |
+| Tamanho | 910 linhas, 10 arquivos | 1524 linhas, 15 arquivos |
+| Testes novos | 32 (63 no total) | 35 (66 no total), incluindo I/O |
+| unit, typecheck, build | ✅ | ✅ |
+| Comandos negados ou pedidos de aprovação | nenhum | nenhum |
+| `--por` inválido | ❌ exceção sem tratamento (stack trace) | ✅ mensagem com as opções válidas |
+| `status` duas vezes seguidas | ❌ muda o arquivo na 1ª inserção dos marcadores | ✅ idempotente |
+| Validação do `plano.json` | ❌ `JSON.parse` sem schema | ✅ schema validado |
+| Gravação | `STATUS.md` não atômico | atômica nos dois arquivos |
+| Relatório ao Maestro | completo | completo |
+
+Os testes de comportamento foram feitos pelo Maestro numa cópia temporária, antes dos pareceres: os dois recusam transição inválida, nota ausente, ID desconhecido e 2ª tarefa D com exit 1 e sem gravar nada, e os dois voltam da bloqueada ao estado anterior.
+
+| Papel | Parecer |
+|---|---|
+| Revisor (DeepSeek V4 Pro) | **Vencedor: DeepSeek Flash**: mais correto e robusto pelo mesmo comportamento funcional; o código extra se justifica. Kimi: 1 importante (exceção sem tratamento) e menores (sem schema, status não idempotente, gravação não atômica, sem testes de I/O). |
+| Segunda opinião (GLM-5.2) | **APROVAR o vencedor.** Contrapeso ao viés de família (o Revisor é DeepSeek): "nenhum viés que mude o resultado; a única divergência semântica favoreceria o Kimi". Confirmou os defeitos do Kimi e achou mais um (`replace` global que colapsa linhas fora do bloco do STATUS). Na versão vencedora: a exceção da E0-T05 é total (o Kimi restringe ao par T00+T05; efeito prático pequeno, mantida) e a volta da bloqueada dependia do log fora do git (corrigido, ver E0-T00). 5 úteis, 1 ruído. |
+| QA (DeepSeek V4.1 Flash) | APROVADO em `00c29f7`: install, unit 66/66, typecheck, build, e2e 3/3, `bun run painel` consistente. |
+
+- **Decisão (Maestro, por delegação de 24/10): vencedor DeepSeek V4.1 Flash, que passa a ser o Dev até a E2.** Consequência: o Revisor não pode mais ser DeepSeek (PAPEIS: nunca da mesma família do Dev).
+- O incidente de 20/10 (comandos rejeitados executados) pesava contra o Kimi, mas não foi preciso usá-lo: a decisão saiu dos critérios objetivos.
+
 ## E1 … E7
 - Pendentes.
