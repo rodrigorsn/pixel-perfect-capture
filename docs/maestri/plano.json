@@ -1,0 +1,31 @@
+{
+  "versao": 1,
+  "etapas": [
+    { "id": "E0", "titulo": "Fundação" },
+    { "id": "E1", "titulo": "Rede de segurança do domínio" }
+  ],
+  "tarefas": [
+    { "id": "E0-T00", "etapa": "E0", "titulo": "painel bun run task, painel e status", "papel": "D", "estado": "em_andamento" },
+    { "id": "E0-T01", "etapa": "E0", "titulo": "instalação reproduzível fora do Lovable", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T02", "etapa": "E0", "titulo": "typecheck limpo", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T03", "etapa": "E0", "titulo": "scripts test e typecheck na main", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T04", "etapa": "E0", "titulo": "CI GitHub Actions: test + typecheck + build", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T05", "etapa": "E0", "titulo": "teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash", "papel": "D", "estado": "em_andamento" },
+    { "id": "E0-T06", "etapa": "E0", "titulo": "destino do trabalho local não commitado", "papel": "P", "estado": "concluida" },
+    { "id": "E0-T07", "etapa": "E0", "titulo": "desvincular do Lovable: vite.config próprio, sem telemetria, lock no npm público", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T08", "etapa": "E0", "titulo": "padronizar fins de linha: versionar .gitattributes e renormalizar", "papel": "D", "estado": "concluida" },
+    { "id": "E0-T09", "etapa": "E0", "titulo": "fixar overrides de versões no package.json", "papel": "D", "estado": "concluida" },
+    { "id": "E1-T00a", "etapa": "E1", "titulo": "repository.load reaplica piso de 5 do tamanho mínimo de grupo", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T00b", "etapa": "E1", "titulo": "store: useRef com estado mais recente e update com retorno verificado", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T00c", "etapa": "E1", "titulo": "testes sintéticos da supressão complementar", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T00d", "etapa": "E1", "titulo": "gate hydrated em todas as páginas que gravam", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T01", "etapa": "E1", "titulo": "calc: normalização e itens invertidos", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T02", "etapa": "E1", "titulo": "calc: mínimo 2 de 3 itens, mínimo 3 participantes, ausência ≠ zero", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T03", "etapa": "E1", "titulo": "privacy: mínimo do grupo + supressão complementar", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T04", "etapa": "E1", "titulo": "suggestions: nunca aprova sozinho, nunca recebe dado individual", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T05", "etapa": "E1", "titulo": "congelamento do instrumento na abertura da campanha", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T00e", "etapa": "E1", "titulo": "remover setor referenciado: bloquear ou exigir arquivamento", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T08", "etapa": "E1", "titulo": "Empresa e setores: aviso ao sair com alterações não salvas", "papel": "D", "estado": "a_fazer" },
+    { "id": "E1-T09", "etapa": "E1", "titulo": "Empresa e setores: validar nome, soma dos setros e campo numérico", "papel": "D", "estado": "a_fazer" }
+  ]
+}
