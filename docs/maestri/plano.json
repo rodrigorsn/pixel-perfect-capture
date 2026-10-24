@@ -1,15 +1,42 @@
 {
   "versao": 1,
   "etapas": [
-    { "id": "E0", "titulo": "Fundação" },
-    { "id": "E1", "titulo": "Rede de segurança do domínio" },
-    { "id": "E2", "titulo": "Fluxo ponta a ponta" },
-    { "id": "E3", "titulo": "Backend real" },
-    { "id": "E4", "titulo": "Coleta anônima" },
-    { "id": "E5", "titulo": "Login e multiempresa" },
-    { "id": "E6", "titulo": "Riscos, ações e relatório no servidor + auditoria" },
-    { "id": "E7", "titulo": "IA real nas sugestões" },
-    { "id": "P", "titulo": "Trilha paralela" }
+    {
+      "id": "E0",
+      "titulo": "Fundação"
+    },
+    {
+      "id": "E1",
+      "titulo": "Rede de segurança do domínio"
+    },
+    {
+      "id": "E2",
+      "titulo": "Fluxo ponta a ponta"
+    },
+    {
+      "id": "E3",
+      "titulo": "Backend real"
+    },
+    {
+      "id": "E4",
+      "titulo": "Coleta anônima"
+    },
+    {
+      "id": "E5",
+      "titulo": "Login e multiempresa"
+    },
+    {
+      "id": "E6",
+      "titulo": "Riscos, ações e relatório no servidor + auditoria"
+    },
+    {
+      "id": "E7",
+      "titulo": "IA real nas sugestões"
+    },
+    {
+      "id": "P",
+      "titulo": "Trilha paralela"
+    }
   ],
   "tarefas": [
     {
@@ -17,7 +44,7 @@
       "etapa": "E0",
       "titulo": "Painel bun run task, painel e status",
       "papel": "D",
-      "estado": "em_andamento"
+      "estado": "aguardando_rodrigo"
     },
     {
       "id": "E0-T01",
@@ -52,7 +79,7 @@
       "etapa": "E0",
       "titulo": "Teste de modelos Kimi K2.7 Code × DeepSeek V4.1 Flash",
       "papel": "D",
-      "estado": "em_andamento"
+      "estado": "aguardando_rodrigo"
     },
     {
       "id": "E0-T06",
