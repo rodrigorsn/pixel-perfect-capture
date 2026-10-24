@@ -5,12 +5,13 @@ Fluxo de cada tarefa: **Maestro → Dev → Revisor → Segunda opinião (só E0
 - **O fluxo completo vale só para código de produto** (`src/`, `tests/`, dependências e scripts do `package.json`).
 - **Trilha leve para docs, config e CI** (`docs/`, `opencode.json`, `.claude/`, `.github/`, `.gitattributes`, `.gitignore`): **Maestro → Revisor → Rodrigo**. Quem escreve é o Maestro, ou o Dev quando a mudança é de CI; sem Segunda opinião e sem QA. O CI verde no GitHub substitui o QA.
 - **Mudanças em `docs/maestri/` acumulam num PR por etapa** (ex.: "E0 — docs do Maestro"), atualizado ao longo da etapa, não um PR por ajuste. Esse PR fecha junto com o PR "<ETAPA> — fechamento".
+- **Delegação ao Maestro (Rodrigo, 24/10): "menos aprovações, mais desenvolvimento".** O Maestro decide e segue sem consultar: delegar tarefas; responder a pedidos de aprovação dos agentes quando o comando é de leitura ou está dentro do escopo da tarefa (fora disso, recusa); escolher entre alternativas técnicas; aprovar a passagem entre etapas do fluxo; fazer o merge de PRs que passaram pelo fluxo com CI verde. **Continua com o Rodrigo:** relaxar permissões (`opencode.json`, `.claude/`), qualquer exceção aos invariantes de anonimato e agregação, dados reais, mudança de escopo ou de datas e o fechamento de etapa. O Maestro informa o que decidiu no STATUS e no VALIDACOES.
 - **Comandos fora da lista são negados, não perguntados:** no `opencode.json`, o bash de todos os agentes tem `"*": "deny"`. O agente que precisar de algo fora da lista para e reporta ao Maestro (o que precisa e por quê); o Maestro leva ao Rodrigo, e uma liberação nova entra no `opencode.json` por PR.
 
 ## Regras do repositório (invioláveis)
 
 - Sem vínculo com o Lovable (E0-T07). Mesmo assim: nunca force push, rebase, amend ou squash de commits já publicados. A `main` sempre funcionando.
-- Uma branch por tarefa (`maestri/*` para estrutura, `etapa/E1-T03-slug` para tarefas). Só entra na `main` com test, typecheck e build verdes, revisão aprovada e ok do Rodrigo. Só o Rodrigo faz merge, pelo PR.
+- Uma branch por tarefa (`maestri/*` para estrutura, `etapa/E1-T03-slug` para tarefas). Só entra na `main` com test, typecheck e build verdes, revisão aprovada e ok do Rodrigo. O merge é sempre pelo PR, com merge commit: feito pelo Rodrigo ou pelo Maestro, por delegação (ver acima).
 - Regras de anonimato e agregação do `docs/HANDOFF.md` (seção 3) são invioláveis: nenhuma tela, export ou contexto de IA recebe resposta individual; a supressão de grupos pequenos é sempre aplicada.
 - Nenhum dado real de trabalhador antes da E4 aprovada.
 
@@ -92,7 +93,7 @@ cd C:\projetos\pixel-perfect-capture-qa       && opencode --agent qa            
 
 ### Maestro
 - **Pode:** editar `docs/maestri/*`, `plano.json`, configs; abrir branches `maestri/*`; push de `maestri/*` e `etapa/*`; abrir PRs; delegar.
-- **Não pode:** implementar features, mergear, push na `main`, force push, relaxar permissões.
+- **Não pode:** implementar features, push direto na `main`, force push, relaxar permissões. Merge só pelo PR, nos termos da delegação de 24/10.
 - **Entrada:** pedidos do Rodrigo, relatórios dos agentes. **Saída:** tarefas delegadas, STATUS, VALIDACOES, PRs.
 
 ### Dev
