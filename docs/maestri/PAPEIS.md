@@ -20,8 +20,8 @@ Fluxo de cada tarefa: **Maestro → Dev → Revisor → Segunda opinião (só E0
 | Papel | Ferramenta / modelo | Responsabilidade | Restrições |
 |---|---|---|---|
 | Maestro | Claude Code, Claude Opus 5.5 | Planejar, delegar, atualizar o painel, conduzir validações | Não implementa features |
-| Dev | OpenCode `dev`, `opencode-go/kimi-k2.7-code` (E0–E2; o teste E0-T05 Kimi × DeepSeek continua valendo; E3–E5 a definir: `claude-sonnet-5-5` não está em `opencode-go`) | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
-| Revisor | OpenCode `revisor`, `opencode-go/deepseek-v4-pro` | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
+| Dev | OpenCode `dev`, `opencode-go/deepseek-v4.1-flash` (E0–E2, vencedor da E0-T05 em 24/10 contra o Kimi K2.7 Code; ver VALIDACOES. E3–E5 a definir: `claude-sonnet-5-5` não está em `opencode-go`) | Uma tarefa por vez, com testes, na própria branch | Máx. 1 tarefa em andamento |
+| Revisor | OpenCode `revisor`, `opencode-go/kimi-k2.7-code` (desde 24/10; antes `deepseek-v4-pro`, trocado por ser da mesma família do Dev) | Revisar cada branch: correção, anonimato, simplicidade; aprovar ou pedir mudanças | Somente leitura; nunca da mesma família do Dev |
 | QA | OpenCode `qa`, `opencode-go/deepseek-v4.1-flash` (alternativa: `opencode-go/claude-haiku-5-5`) | Rodar test, typecheck, build, e2e; percorrer o fluxo; reportar evidências | Não edita código; resume logs |
 | Segunda opinião | OpenCode `segunda-opiniao`, `opencode-go/glm-5.2` | Parecer independente após o Revisor, só E0–E2 | Somente leitura; proibido a partir da E3 |
 | Rodrigo | Product Owner | Aprovar fim de etapa e decisões; faz o merge | — |
